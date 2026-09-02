@@ -1,0 +1,31 @@
+name: qlyp_core
+description: Shared QLYP core library for client and pilote apps.
+version: 0.1.0
+publish_to: "none"
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cloud_firestore: ^6.0.1
+  crypto: ^3.0.6
+  firebase_auth: ^6.0.2
+  firebase_messaging: ^16.0.2
+  flutter_local_notifications: ^19.4.2
+  google_sign_in: ^7.2.0
+  sign_in_with_apple: ^7.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  assets:
+    - assets/styles/
+    - assets/markers/
+    - assets/sounds/
+    - assets/animations/
