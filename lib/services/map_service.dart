@@ -143,9 +143,50 @@ class QlypMapService {
   static const String selectedMapTypeOsm = 'osm';
 
   static const String packageAssetPrefix = 'packages/qlyp_core/assets';
-  static const String markerPickup = '$packageAssetPrefix/markers/pickup.png';
-  static const String markerDropoff = '$packageAssetPrefix/markers/dropoff.png';
-  static const String markerCab = '$packageAssetPrefix/markers/ic_cab.png';
+  static const String markersPath = '$packageAssetPrefix/markers';
+
+  /// Vehicle map marker SVGs (admin-configurable via service_markers).
+  static const String markerSedanDark = '$markersPath/sedan_dark.svg';
+  static const String markerSedanBlue = '$markersPath/sedan_blue.svg';
+  static const String markerSedanViolet = '$markersPath/sedan_violet.svg';
+  static const String markerSedanViolet2 = '$markersPath/sedan_violet_2.svg';
+  static const String markerSedanViolet3 = '$markersPath/sedan_violet_3.svg';
+  static const String markerSuvBlack = '$markersPath/suv_black.svg';
+  static const String markerSuvBlue = '$markersPath/suv_blue.svg';
+  static const String markerSuvGrey = '$markersPath/suv_grey.svg';
+  static const String markerSuvWhite = '$markersPath/suv_white.svg';
+  static const String markerTowViolet = '$markersPath/tow_violet.svg';
+  static const String markerTowViolet2 = '$markersPath/tow_violet_2.svg';
+  static const String markerTruckCargo = '$markersPath/truck_cargo.svg';
+  static const String markerTruckCube = '$markersPath/truck_cube.svg';
+  static const String markerVanCreamEv = '$markersPath/van_cream_ev.svg';
+  static const String markerVanMint = '$markersPath/van_mint.svg';
+  static const String markerVanMint2 = '$markersPath/van_mint_2.svg';
+  static const String markerVanWhiteEv = '$markersPath/van_white_ev.svg';
+  static const String markerWagonViolet = '$markersPath/wagon_violet.svg';
+  static const String markerWagonViolet2 = '$markersPath/wagon_violet_2.svg';
+
+  static const List<String> allVehicleMarkers = [
+    markerSedanDark,
+    markerSedanBlue,
+    markerSedanViolet,
+    markerSedanViolet2,
+    markerSedanViolet3,
+    markerSuvBlack,
+    markerSuvBlue,
+    markerSuvGrey,
+    markerSuvWhite,
+    markerTowViolet,
+    markerTowViolet2,
+    markerTruckCargo,
+    markerTruckCube,
+    markerVanCreamEv,
+    markerVanMint,
+    markerVanMint2,
+    markerVanWhiteEv,
+    markerWagonViolet,
+    markerWagonViolet2,
+  ];
 
   static MapProvider providerFromString(String? value) {
     switch (value?.toLowerCase()) {
