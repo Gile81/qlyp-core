@@ -14,6 +14,8 @@ export 'services/firestore_service.dart';
 export 'services/map_service.dart';
 export 'services/qlyp_lottie_view.dart';
 export 'services/qlyp_map_view.dart';
+export 'services/qlyp_marker_renderer.dart';
 export 'services/qlyp_route_layer.dart';
+export 'services/qlyp_service_marker_registry.dart';
 export 'services/notification_service.dart';
 export 'services/places_service.dart';
