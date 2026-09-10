@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="88" viewBox="0 0 64 88">
+  <defs>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.6" flood-color="#0A1826" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <path filter="url(#soft)" d="M32 2
+    C46.4 2 56 12.4 56 26.2
+    C56 40.6 45 53.8 35.4 82.4
+    C34.5 85 29.5 85 28.6 82.4
+    C19 53.8 8 40.6 8 26.2
+    C8 12.4 17.6 2 32 2 Z"
+    fill="#142C44" stroke="#F4F7FA" stroke-width="2"/>
+  <circle cx="32" cy="27" r="9.5" fill="#F4F7FA"/>
+  <circle cx="32" cy="27" r="9.5" fill="none" stroke="#27D96B" stroke-width="2.4"/>
+</svg>

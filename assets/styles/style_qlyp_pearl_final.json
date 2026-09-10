@@ -1,0 +1,91 @@
+{
+  "version": 8,
+  "name": "Qlyp Pearl — Final Validé",
+  "metadata": {
+    "qlyp:version": "Pearl Final",
+    "qlyp:route_color": "#27D96B (Emerald clair) — géré par qlyp_route_layer.dart, pas par ce fichier",
+    "qlyp:font": "Inter (natif Standard)",
+    "qlyp:traffic": "showTrafficLayers activé nativement, pas de recoloration custom pour linstant",
+    "qlyp:presets": [
+      "day (6h-20h)",
+      "dusk (20h-22h)",
+      "night (22h-6h)"
+    ],
+    "qlyp:flutter_switch": "voir qlyp_map_view.dart _applyTheme()"
+  },
+  "imports": [
+    {
+      "id": "basemap",
+      "url": "mapbox://styles/mapbox/standard",
+      "config": {
+        "lightPreset": "day",
+        "font": "Inter",
+        "showPlaceLabels": true,
+        "showPointOfInterestLabels": true,
+        "showTransitLabels": true,
+        "showRoadLabels": true,
+        "showLandmarkIcons": true,
+        "show3dObjects": true,
+        "showTrafficLayers": true
+      }
+    }
+  ],
+  "sources": {
+    "composite": {
+      "type": "vector",
+      "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2"
+    }
+  },
+  "layers": [
+    {
+      "id": "qlyp-bg",
+      "type": "background",
+      "slot": "bottom",
+      "paint": {
+        "background-color": "#F4F7FA",
+        "background-emissive-strength": 1.0
+      }
+    },
+    {
+      "id": "qlyp-water",
+      "type": "fill",
+      "slot": "bottom",
+      "source": "composite",
+      "source-layer": "water",
+      "paint": {
+        "fill-color": "#B8D4E8",
+        "fill-emissive-strength": 0.8
+      }
+    },
+    {
+      "id": "qlyp-parks",
+      "type": "fill",
+      "slot": "bottom",
+      "source": "composite",
+      "source-layer": "landuse",
+      "filter": [
+        "in",
+        [
+          "get",
+          "class"
+        ],
+        [
+          "literal",
+          [
+            "park",
+            "national_park",
+            "cemetery",
+            "grass",
+            "wood",
+            "scrub"
+          ]
+        ]
+      ],
+      "paint": {
+        "fill-color": "#CCDFC8",
+        "fill-opacity": 0.9,
+        "fill-emissive-strength": 0.5
+      }
+    }
+  ]
+}

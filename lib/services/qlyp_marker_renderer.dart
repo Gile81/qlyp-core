@@ -5,14 +5,19 @@ import 'dart:ui' as ui;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-/// Renders qlyp-core SVG map markers to PNG bytes for map SDKs (Google / Mapbox).
+/// Renders qlyp-core SVG map markers to bitmap bytes for map SDKs (Google / Mapbox).
 class QlypMarkerRenderer {
   QlypMarkerRenderer._();
 
   static final Map<String, Uint8List> _cache = {};
+  static final Map<String, Uint8List> _cacheRaw = {};
 
   /// Renders [assetPath] (e.g. packages/qlyp_core/assets/markers/sedan_dark.svg)
-  /// to PNG bytes sized [sizePx] x [sizePx], preserving aspect ratio.
+  /// to PNG-encoded bytes sized [sizePx] x [sizePx], preserving aspect ratio.
+  ///
+  /// Use this for `BitmapDescriptor.fromBytes` (google_maps_flutter), which
+  /// decodes an encoded image itself. For Mapbox's `MbxImage`, use
+  /// [renderSvgMarkerRaw] instead — see its doc comment for why.
   static Future<Uint8List> renderSvgMarker(
     String assetPath, {
     required int sizePx,
@@ -27,14 +32,40 @@ class QlypMarkerRenderer {
       return cached;
     }
 
-    final bytes = await _render(assetPath, sizePx);
+    final bytes = await _render(assetPath, sizePx, ui.ImageByteFormat.png);
     _cache[cacheKey] = bytes;
     return bytes;
   }
 
-  static void clearCache() => _cache.clear();
+  /// Renders [assetPath] to **PNG-encoded** bytes for Mapbox's
+  /// `style.addStyleImage`.
+  ///
+  /// Despite the "Raw" in the method name (historical), this method now
+  /// returns PNG-encoded bytes — not raw RGBA.  Mapbox Maps Flutter ≥ 2.3 on
+  /// Android calls `BitmapFactory.decodeByteArray()` internally, which
+  /// requires a valid PNG/JPEG stream; passing raw RGBA bytes causes a
+  /// `NullPointerException` on `Bitmap.getConfig()` inside the Mapbox
+  /// `StyleController.addStyleImage` native method.
+  ///
+  /// Delegates to [renderSvgMarker] so both paths share the same cache and
+  /// the same output format.  The `_cacheRaw` map is kept for compatibility
+  /// but is no longer populated (entries written by older builds are stale).
+  static Future<Uint8List> renderSvgMarkerRaw(
+    String assetPath, {
+    required int sizePx,
+  }) =>
+      renderSvgMarker(assetPath, sizePx: sizePx);
 
-  static Future<Uint8List> _render(String assetPath, int sizePx) async {
+  static void clearCache() {
+    _cache.clear();
+    _cacheRaw.clear();
+  }
+
+  static Future<Uint8List> _render(
+    String assetPath,
+    int sizePx,
+    ui.ImageByteFormat format,
+  ) async {
     PictureInfo? pictureInfo;
     ui.Image? image;
 
@@ -63,8 +94,7 @@ class QlypMarkerRenderer {
 
       final picture = recorder.endRecording();
       image = await picture.toImage(sizePx, sizePx);
-      final byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+      final byteData = await image.toByteData(format: format);
 
       if (byteData == null) {
         return Uint8List(0);

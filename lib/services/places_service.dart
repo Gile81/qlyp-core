@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
+import '../utils/canada_geo.dart';
+
 /// Canadian locale passed to Google Places.
 enum PlacesLanguage {
   frCa('fr-CA'),
@@ -50,6 +52,7 @@ class PlaceSuggestion {
     this.title,
     this.mainText,
     this.secondaryText,
+    this.matchedSubstrings,
   });
 
   final String placeId;
@@ -59,11 +62,17 @@ class PlaceSuggestion {
   final String? secondaryText;
   final PlaceSuggestionSource source;
 
+  /// Portions of [mainText] that match the user's query, as returned by
+  /// Google Places `main_text_matched_substrings`.  Each entry has an
+  /// `offset` and a `length` (character positions in [mainText]).
+  final List<Map<String, int>>? matchedSubstrings;
+
   factory PlaceSuggestion.google({
     required String placeId,
     required String description,
     String? mainText,
     String? secondaryText,
+    List<Map<String, int>>? matchedSubstrings,
   }) {
     return PlaceSuggestion(
       placeId: placeId,
@@ -72,6 +81,7 @@ class PlaceSuggestion {
       mainText: mainText,
       secondaryText: secondaryText,
       source: PlaceSuggestionSource.google,
+      matchedSubstrings: matchedSubstrings,
     );
   }
 }
@@ -85,9 +95,11 @@ class PlaceDetails {
     this.name,
     this.city,
     this.state,
+    this.stateCode,
     this.country,
     this.postalCode,
     this.street,
+    this.unit,
     this.source = PlaceSuggestionSource.google,
   });
 
@@ -96,10 +108,18 @@ class PlaceDetails {
   final String formattedAddress;
   final String? name;
   final String? city;
+
+  /// Full province/state name (Google `administrative_area_level_1` long_name), e.g. "Quebec".
   final String? state;
+
+  /// Two-letter province/state abbreviation (Google short_name), e.g. "QC". Prefer this for display.
+  final String? stateCode;
   final String? country;
   final String? postalCode;
   final String? street;
+
+  /// Apartment/suite/unit number (Google `subpremise`), when the resolved place has one.
+  final String? unit;
   final PlaceSuggestionSource source;
 }
 
@@ -129,6 +149,11 @@ class PlacesService {
   final PlacesLanguage _language;
   final http.Client _client;
   final bool _ownsClient;
+
+  /// Set to true by [dispose].  Used to short-circuit in-flight requests
+  /// that arrive after the owning controller has been disposed, avoiding
+  /// "Client is already closed" log noise while still returning null safely.
+  bool _disposed = false;
 
   String? _sessionToken;
 
@@ -170,7 +195,7 @@ class PlacesService {
     double? originLng,
   }) async {
     final q = query.trim();
-    if (q.isEmpty) {
+    if (q.isEmpty || _disposed) {
       return const [];
     }
 
@@ -187,7 +212,9 @@ class PlacesService {
         originLng: originLng,
       );
     } catch (error, stack) {
-      debugPrint('PlacesService Google autocomplete failed: $error\n$stack');
+      if (!_disposed) {
+        debugPrint('PlacesService Google autocomplete failed: $error\n$stack');
+      }
       return const [];
     }
   }
@@ -221,19 +248,26 @@ class PlacesService {
     required double latitude,
     required double longitude,
   }) async {
-    if (!hasGoogleApiKey) {
+    if (!hasGoogleApiKey || _disposed) {
       return null;
     }
 
     try {
       return await _reverseGeocodeGoogle(latitude, longitude);
     } catch (error, stack) {
-      debugPrint('PlacesService Google reverse geocode failed: $error\n$stack');
+      // Suppress the "Client is already closed" log that fires when the
+      // owning controller is disposed while this request was in-flight.
+      // The request was already started before _disposed was set; returning
+      // null is the correct silent behaviour in that case.
+      if (!_disposed) {
+        debugPrint('PlacesService Google reverse geocode failed: $error\n$stack');
+      }
       return null;
     }
   }
 
   void dispose() {
+    _disposed = true;
     if (_ownsClient) {
       _client.close();
     }
@@ -249,16 +283,28 @@ class PlacesService {
       'key': _googleApiKey!,
       'components': 'country:ca',
       'language': _language.code,
+      // No 'types' parameter → Google returns all result types by default:
+      // streets, intersections, neighborhoods, cities, AND establishments
+      // (airports, hospitals, businesses, POIs).
+      //
+      // Former value 'geocode' excluded establishments, which meant that
+      // searches like "Aéroport Trudeau" or "Hôpital Sacré-Cœur" returned
+      // no results.  The even earlier 'address' was too strict (required a
+      // complete civic number).  Omitting 'types' is the correct default.
     };
 
     if (_sessionToken != null) {
       params['sessiontoken'] = _sessionToken!;
     }
 
-    if (originLat != null && originLng != null) {
-      params['location'] = '$originLat,$originLng';
-      params['radius'] = '50000';
+    var biasLat = originLat ?? CanadaGeo.defaultLatitude;
+    var biasLng = originLng ?? CanadaGeo.defaultLongitude;
+    if (CanadaGeo.shouldUseCanadaFallback(biasLat, biasLng)) {
+      biasLat = CanadaGeo.defaultLatitude;
+      biasLng = CanadaGeo.defaultLongitude;
     }
+    params['location'] = '$biasLat,$biasLng';
+    params['radius'] = '${CanadaGeo.defaultSearchRadiusMeters}';
 
     final uri = Uri.parse(_googleAutocompleteUrl).replace(queryParameters: params);
     final response = await _client.get(uri);
@@ -279,11 +325,25 @@ class PlacesService {
         .map((prediction) {
           final structured = prediction['structured_formatting']
               as Map<String, dynamic>?;
+
+          // Extract `main_text_matched_substrings` so the UI can bold the
+          // portion of the suggestion that matches the user's query.
+          final rawSubs = structured?['main_text_matched_substrings']
+              as List<dynamic>? ?? const [];
+          final matchedSubstrings = rawSubs
+              .whereType<Map<String, dynamic>>()
+              .map((m) => <String, int>{
+                    'offset': (m['offset'] as num?)?.toInt() ?? 0,
+                    'length': (m['length'] as num?)?.toInt() ?? 0,
+                  })
+              .toList();
+
           return PlaceSuggestion.google(
             placeId: prediction['place_id'] as String? ?? '',
             description: prediction['description'] as String? ?? '',
             mainText: structured?['main_text'] as String?,
             secondaryText: structured?['secondary_text'] as String?,
+            matchedSubstrings: matchedSubstrings.isEmpty ? null : matchedSubstrings,
           );
         })
         .where((s) => s.placeId.isNotEmpty && s.description.isNotEmpty)
@@ -402,10 +462,12 @@ class PlacesService {
 
     String city = '';
     String? state;
+    String? stateCode;
     String? country;
     String? postalCode;
     String houseNumber = '';
     String route = '';
+    String? unit;
 
     for (final component in components) {
       final types = (component['types'] as List<dynamic>? ?? const [])
@@ -413,11 +475,13 @@ class PlacesService {
           .toList();
 
       final longName = component['long_name'] as String? ?? '';
+      final shortName = component['short_name'] as String? ?? longName;
 
       if (types.contains('locality')) {
         city = longName;
       } else if (types.contains('administrative_area_level_1')) {
         state = longName;
+        stateCode = shortName;
       } else if (types.contains('country')) {
         country = longName;
       } else if (types.contains('postal_code')) {
@@ -426,6 +490,8 @@ class PlacesService {
         houseNumber = longName;
       } else if (types.contains('route')) {
         route = longName;
+      } else if (types.contains('subpremise')) {
+        unit = longName;
       }
     }
 
@@ -441,9 +507,11 @@ class PlacesService {
       name: result['name'] as String?,
       city: city.isEmpty ? null : city,
       state: state,
+      stateCode: stateCode,
       country: country,
       postalCode: postalCode,
       street: street.isEmpty ? null : street,
+      unit: unit,
       source: PlaceSuggestionSource.google,
     );
   }

@@ -19,3 +19,5 @@ export 'services/qlyp_route_layer.dart';
 export 'services/qlyp_service_marker_registry.dart';
 export 'services/notification_service.dart';
 export 'services/places_service.dart';
+export 'services/qlyp_address_formatter.dart';
+export 'utils/canada_geo.dart';
