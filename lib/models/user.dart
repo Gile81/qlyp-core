@@ -81,7 +81,9 @@ class UserModel {
     data['reviewsCount'] = reviewsCount;
     data['reviewsSum'] = reviewsSum;
     data['isActive'] = isActive;
-    data['walletAmount'] = walletAmount;
+    // Ne pas envoyer walletAmount si null : merge: true laisserait la valeur
+    // Firestore intacte, évitant le rejet par la règle doesNotChangeWallet().
+    if (walletAmount != null) data['walletAmount'] = walletAmount;
     data['createdAt'] = createdAt;
     data['password'] = password;
     if (accessCode != null && accessCode!.trim().isNotEmpty) {

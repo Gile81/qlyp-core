@@ -112,3 +112,51 @@ class QlypColors {
   static const Color grey900 = Color(0xFF111827);
   static const Color danger200 = Color(0xFFFF7277);
 }
+
+/// Shared visual tokens: emerald gradient + floating elevation.
+/// Use from any app via `import 'package:qlyp_core/constants/qlyp_colors.dart'`.
+class QlypStyle {
+  const QlypStyle._();
+
+  static const double bentoRadius = 12.0;
+  static const double buttonRadius = 12.0;
+
+  static LinearGradient get brandGradient => const LinearGradient(
+        colors: QlypColors.gradientBrand,
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+
+  static LinearGradient get brandGradientDark => const LinearGradient(
+        colors: [QlypColors.emeraldDark, QlypColors.emeraldDark],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+
+  static List<BoxShadow> get floatingShadow => [
+        BoxShadow(
+          color: QlypColors.emerald.withValues(alpha: 0.28),
+          blurRadius: 18,
+          offset: const Offset(0, 6),
+        ),
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.06),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ];
+
+  static List<BoxShadow> get floatingShadowLight => [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.08),
+          blurRadius: 14,
+          offset: const Offset(0, 4),
+        ),
+      ];
+
+  static BoxDecoration bentoDecoration({Color? color}) => BoxDecoration(
+        color: color ?? QlypColors.white,
+        borderRadius: BorderRadius.circular(bentoRadius),
+        boxShadow: floatingShadowLight,
+      );
+}

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
@@ -94,6 +96,29 @@ String qlypLightPresetForTime([DateTime? time]) {
   return 'night';
 }
 
+/// Resolves the active light preset for a [QlypMapView] (theme + time).
+String resolveQlypMapLightPreset({
+  QlypMapTheme theme = QlypMapTheme.pearl,
+  DateTime? time,
+}) {
+  if (theme == QlypMapTheme.midnight) {
+    return 'night';
+  }
+  return qlypLightPresetForTime(time);
+}
+
+/// Tracks the active light preset per [MapboxMap] (set by [QlypMapView]).
+final Map<int, String> _qlypMapLightPresets = <int, String>{};
+
+/// Registers [preset] for [map] so route layers can match basemap lighting.
+void registerQlypMapLightPreset(MapboxMap map, String preset) {
+  _qlypMapLightPresets[identityHashCode(map)] = preset;
+}
+
+/// Returns the preset registered for [map], or [qlypLightPresetForTime] if unknown.
+String qlypMapLightPreset(MapboxMap map) =>
+    _qlypMapLightPresets[identityHashCode(map)] ?? qlypLightPresetForTime();
+
 // ── QlypMapView widget ──────────────────────────────────────────────────────
 
 /// Mapbox Standard map pre-configured for QLYP:
@@ -119,6 +144,10 @@ class QlypMapView extends StatefulWidget {
     // null = Mapbox default (no explicit config — avoids a silent choice).
     this.language,
     this.onMapCreated,
+    /// When false, disables pinch/pan/rotate (static preview tiles).
+    this.interactive = true,
+    /// When true, allows two-finger pitch on the map.
+    this.enablePitch = false,
   });
 
   final double latitude;
@@ -128,6 +157,8 @@ class QlypMapView extends StatefulWidget {
   final QlypMapTheme theme;
   final String? language;
   final void Function(MapboxMap map)? onMapCreated;
+  final bool interactive;
+  final bool enablePitch;
 
   @override
   State<QlypMapView> createState() => _QlypMapViewState();
@@ -169,6 +200,7 @@ class _QlypMapViewState extends State<QlypMapView> {
 
     // QLYP custom layer colours for the active preset.
     await applyQlypLayerColors(map, preset);
+    registerQlypMapLightPreset(map, preset);
   }
 
   void _syncPresetTimer() {
@@ -193,11 +225,41 @@ class _QlypMapViewState extends State<QlypMapView> {
     _styleFuture = loadQlypPearlStyleJson();
   }
 
+  Future<void> _applyGestureSettings(MapboxMap mapboxMap) async {
+    if (!widget.interactive) {
+      await mapboxMap.gestures.updateSettings(
+        GesturesSettings(
+          scrollEnabled: false,
+          pinchToZoomEnabled: false,
+          rotateEnabled: false,
+          pitchEnabled: false,
+          doubleTapToZoomInEnabled: false,
+          doubleTouchToZoomOutEnabled: false,
+          quickZoomEnabled: false,
+        ),
+      );
+      return;
+    }
+
+    await mapboxMap.gestures.updateSettings(
+      GesturesSettings(
+        scrollEnabled: true,
+        pinchToZoomEnabled: true,
+        rotateEnabled: true,
+        pitchEnabled: widget.enablePitch,
+        doubleTapToZoomInEnabled: true,
+        doubleTouchToZoomOutEnabled: true,
+        quickZoomEnabled: true,
+      ),
+    );
+  }
+
   Future<void> _onMapCreated(MapboxMap mapboxMap) async {
     _mapboxMap = mapboxMap;
     // Style is already applied (passed as styleUri to MapWidget).
     // Only dynamic properties need to be pushed: light preset + layer colours.
     await _applyTheme(mapboxMap);
+    await _applyGestureSettings(mapboxMap);
     widget.onMapCreated?.call(mapboxMap);
   }
 
@@ -209,6 +271,12 @@ class _QlypMapViewState extends State<QlypMapView> {
       _syncPresetTimer();
       if (_mapboxMap != null) {
         _applyTheme(_mapboxMap!);
+      }
+    }
+    if (oldWidget.interactive != widget.interactive ||
+        oldWidget.enablePitch != widget.enablePitch) {
+      if (_mapboxMap != null) {
+        _applyGestureSettings(_mapboxMap!);
       }
     }
   }
@@ -239,6 +307,15 @@ class _QlypMapViewState extends State<QlypMapView> {
             zoom: widget.zoom,
             pitch: widget.pitch,
           ),
+          // Required when MapWidget sits inside a ScrollView — otherwise the
+          // parent scroll view wins the gesture arena and the map feels frozen.
+          gestureRecognizers: widget.interactive
+              ? <Factory<OneSequenceGestureRecognizer>>{
+                  Factory<OneSequenceGestureRecognizer>(
+                    () => EagerGestureRecognizer(),
+                  ),
+                }
+              : const <Factory<OneSequenceGestureRecognizer>>{},
           onMapCreated: _onMapCreated,
         );
       },
