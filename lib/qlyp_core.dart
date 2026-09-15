@@ -1,5 +1,7 @@
+export 'config/typography.dart';
 export 'constants/qlyp_animations.dart';
 export 'constants/qlyp_colors.dart';
+export 'constants/qlyp_motion.dart';
 export 'constants/qlyp_routes.dart';
 export 'models/geo_lat_lng.dart';
 export 'models/booking.dart';
@@ -26,3 +28,4 @@ export 'services/notification_service.dart';
 export 'services/places_service.dart';
 export 'services/qlyp_address_formatter.dart';
 export 'utils/canada_geo.dart';
+export 'widgets/qlyp_menu_bento_tile.dart';
