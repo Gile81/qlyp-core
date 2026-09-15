@@ -21,6 +21,7 @@ class UserModel {
   num? allowedQuota;
   num? remainingQuota;
   String? languageCode;
+  bool? notificationsEnabled;
 
   UserModel({
     this.fullName,
@@ -43,6 +44,7 @@ class UserModel {
     this.allowedQuota,
     this.remainingQuota,
     this.languageCode,
+    this.notificationsEnabled,
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -66,6 +68,7 @@ class UserModel {
     allowedQuota = json['allowedQuota'];
     remainingQuota = json['remainingQuota'];
     languageCode = json['languageCode']?.toString();
+    notificationsEnabled = json['notificationsEnabled'] != false;
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +106,9 @@ class UserModel {
     }
     if (languageCode != null && languageCode!.trim().isNotEmpty) {
       data['languageCode'] = languageCode;
+    }
+    if (notificationsEnabled == false) {
+      data['notificationsEnabled'] = false;
     }
     return data;
   }
