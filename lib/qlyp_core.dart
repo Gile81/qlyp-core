@@ -18,6 +18,7 @@ export 'models/vehicle.dart';
 export 'services/auth_service.dart';
 export 'services/onboarding_service.dart';
 export 'services/firestore_service.dart';
+export 'services/qlyp_firebase_functions.dart';
 export 'services/map_service.dart';
 export 'services/qlyp_lottie_view.dart';
 export 'services/qlyp_map_view.dart';
