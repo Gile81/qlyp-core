@@ -45,6 +45,11 @@ abstract class QlypNotificationService {
   static const String alertChannelName = 'Qlyp Alerts';
   static const String alertSoundResource = 'bid_beep';
 
+  /// Direct dispatch overlay (server FCM) — separate from bid/marketplace alerts.
+  static const String dispatchChannelId = 'qlyp_dispatch_channel';
+  static const String dispatchChannelName = 'Qlyp Dispatch';
+  static const String dispatchSoundResource = 'dispatch_alarm';
+
   String get channelDescription => 'Qlyp alerts';
 
   NotificationTapHandler get onMessageTap;
@@ -95,6 +100,16 @@ abstract class QlypNotificationService {
           sound: const RawResourceAndroidNotificationSound(alertSoundResource),
         ),
       );
+      await androidPlugin?.createNotificationChannel(
+        AndroidNotificationChannel(
+          dispatchChannelId,
+          dispatchChannelName,
+          description: channelDescription,
+          importance: Importance.max,
+          playSound: true,
+          sound: const RawResourceAndroidNotificationSound(dispatchSoundResource),
+        ),
+      );
 
       await setupInteractedMessage();
     }
@@ -139,21 +154,32 @@ abstract class QlypNotificationService {
     log('Got a message whilst in the foreground!');
     log('Message data: ${message.notification!.body.toString()}');
     try {
+      final data = message.data;
+      final channelId = data['channel'] == dispatchChannelId ||
+              data['type'] == 'dispatch_direct'
+          ? dispatchChannelId
+          : alertChannelId;
+      final channelName =
+          channelId == dispatchChannelId ? dispatchChannelName : alertChannelName;
+      final soundResource = channelId == dispatchChannelId
+          ? dispatchSoundResource
+          : alertSoundResource;
+
       final androidDetails = AndroidNotificationDetails(
-        alertChannelId,
-        alertChannelName,
+        channelId,
+        channelName,
         channelDescription: channelDescription,
         importance: Importance.high,
         priority: Priority.high,
         ticker: 'ticker',
-        sound: const RawResourceAndroidNotificationSound(alertSoundResource),
+        sound: RawResourceAndroidNotificationSound(soundResource),
       );
 
       final iosDetails = DarwinNotificationDetails(
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
-        sound: '$alertSoundResource.wav',
+        sound: '$soundResource.wav',
       );
 
       await flutterLocalNotificationsPlugin.show(
