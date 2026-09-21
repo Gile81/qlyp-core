@@ -50,6 +50,10 @@ abstract class QlypNotificationService {
   static const String dispatchChannelName = 'Qlyp Dispatch';
   static const String dispatchSoundResource = 'dispatch_alarm';
 
+  static const String marketplaceChannelId = 'qlyp_marketplace_channel';
+  static const String marketplaceChannelName = 'Qlyp Marketplace';
+  static const String marketplaceSoundResource = 'incoming_bid';
+
   String get channelDescription => 'Qlyp alerts';
 
   NotificationTapHandler get onMessageTap;
@@ -110,6 +114,16 @@ abstract class QlypNotificationService {
           sound: const RawResourceAndroidNotificationSound(dispatchSoundResource),
         ),
       );
+      await androidPlugin?.createNotificationChannel(
+        AndroidNotificationChannel(
+          marketplaceChannelId,
+          marketplaceChannelName,
+          description: channelDescription,
+          importance: Importance.defaultImportance,
+          playSound: true,
+          sound: const RawResourceAndroidNotificationSound(marketplaceSoundResource),
+        ),
+      );
 
       await setupInteractedMessage();
     }
@@ -155,15 +169,25 @@ abstract class QlypNotificationService {
     log('Message data: ${message.notification!.body.toString()}');
     try {
       final data = message.data;
-      final channelId = data['channel'] == dispatchChannelId ||
-              data['type'] == 'dispatch_direct'
-          ? dispatchChannelId
-          : alertChannelId;
-      final channelName =
-          channelId == dispatchChannelId ? dispatchChannelName : alertChannelName;
+      final String channelId;
+      if (data['channel'] == dispatchChannelId || data['type'] == 'dispatch_direct') {
+        channelId = dispatchChannelId;
+      } else if (data['channel'] == marketplaceChannelId ||
+          (data['type']?.toString().startsWith('marketplace_') ?? false)) {
+        channelId = marketplaceChannelId;
+      } else {
+        channelId = alertChannelId;
+      }
+      final channelName = channelId == dispatchChannelId
+          ? dispatchChannelName
+          : channelId == marketplaceChannelId
+              ? marketplaceChannelName
+              : alertChannelName;
       final soundResource = channelId == dispatchChannelId
           ? dispatchSoundResource
-          : alertSoundResource;
+          : channelId == marketplaceChannelId
+              ? marketplaceSoundResource
+              : alertSoundResource;
 
       final androidDetails = AndroidNotificationDetails(
         channelId,
