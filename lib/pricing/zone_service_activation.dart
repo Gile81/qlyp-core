@@ -14,6 +14,8 @@ const zoneActivationKeys = [
   'deverrouillage',
 ];
 
+const legacyZoneActivationKeys = ['assistance', 'rideshare'];
+
 const mainServiceIdToActivationKey = {
   'KME0X43zSpbDmt4TfuRH': 'courses',
   'zuPyze05L5XVsyLMAOB4': 'transport_adapte',
@@ -49,14 +51,59 @@ List<String> normalizeActivationKeys(Object? raw) {
   return out;
 }
 
-List<String> readServicesEnabledFromZone(Map<String, dynamic> doc) {
+bool usesLegacyServicesEnabledFormat(Object? raw) {
+  if (raw is! List) return false;
+  final keys = raw.map(normActivationKey).toSet();
+  if (legacyZoneActivationKeys.any(keys.contains)) return true;
+  if (keys.contains('logistique') &&
+      !keys.contains('livraison_express') &&
+      !keys.contains('demenagement')) {
+    return true;
+  }
+  return false;
+}
+
+List<String> migrateLegacyServicesEnabled(Object? raw) {
+  final keys = <String>{};
+  if (raw is List) {
+    for (final v in raw) {
+      keys.add(normActivationKey(v));
+    }
+  }
+  final out = <String>{};
+  for (final k in keys) {
+    if (zoneActivationKeys.contains(k)) out.add(k);
+  }
+  if (keys.contains('logistique')) {
+    out.addAll(['livraison_express', 'logistique', 'demenagement']);
+  }
+  if (keys.contains('assistance')) {
+    out.addAll(['towing', 'survoltage', 'deverrouillage']);
+  }
+  if (keys.contains('rideshare')) {
+    out.add('qlyp_route');
+  }
+  return zoneActivationKeys.where(out.contains).toList();
+}
+
+List<String> resolveServicesEnabledKeys(Object? raw) {
+  if (usesLegacyServicesEnabledFormat(raw)) {
+    return migrateLegacyServicesEnabled(raw);
+  }
+  return normalizeActivationKeys(raw);
+}
+
+Object? _rawServicesEnabledFromDoc(Map<String, dynamic> doc) {
   final services = doc['services'];
   Object? fromServices;
   if (services is Map) {
     fromServices = services['services_enabled'] ?? services['servicesEnabled'];
   }
-  final raw = doc['services_enabled'] ?? doc['servicesEnabled'] ?? fromServices;
-  return normalizeActivationKeys(raw);
+  return doc['services_enabled'] ?? doc['servicesEnabled'] ?? fromServices;
+}
+
+List<String> readServicesEnabledFromZone(Map<String, dynamic> doc) {
+  return resolveServicesEnabledKeys(_rawServicesEnabledFromDoc(doc));
 }
 
 List<String> readDisabledTierKeys(Map<String, dynamic> doc) {
