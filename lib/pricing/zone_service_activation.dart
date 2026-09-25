@@ -16,6 +16,8 @@ const zoneActivationKeys = [
 
 const legacyZoneActivationKeys = ['assistance', 'rideshare'];
 
+const servicesActivationVersion = 2;
+
 const mainServiceIdToActivationKey = {
   'KME0X43zSpbDmt4TfuRH': 'courses',
   'zuPyze05L5XVsyLMAOB4': 'transport_adapte',
@@ -86,7 +88,24 @@ List<String> migrateLegacyServicesEnabled(Object? raw) {
   return zoneActivationKeys.where(out.contains).toList();
 }
 
-List<String> resolveServicesEnabledKeys(Object? raw) {
+int? readServicesActivationVersion(Map<String, dynamic> doc) {
+  final raw =
+      doc['services_activation_version'] ?? doc['servicesActivationVersion'];
+  if (raw is int) return raw;
+  if (raw is num && raw.isFinite) return raw.truncate();
+  if (raw is String && RegExp(r'^\d+$').hasMatch(raw.trim())) {
+    return int.parse(raw.trim());
+  }
+  return null;
+}
+
+List<String> resolveServicesEnabledKeys(
+  Object? raw, {
+  int? activationVersion,
+}) {
+  if (activationVersion == servicesActivationVersion) {
+    return normalizeActivationKeys(raw);
+  }
   if (usesLegacyServicesEnabledFormat(raw)) {
     return migrateLegacyServicesEnabled(raw);
   }
@@ -103,7 +122,10 @@ Object? _rawServicesEnabledFromDoc(Map<String, dynamic> doc) {
 }
 
 List<String> readServicesEnabledFromZone(Map<String, dynamic> doc) {
-  return resolveServicesEnabledKeys(_rawServicesEnabledFromDoc(doc));
+  return resolveServicesEnabledKeys(
+    _rawServicesEnabledFromDoc(doc),
+    activationVersion: readServicesActivationVersion(doc),
+  );
 }
 
 List<String> readDisabledTierKeys(Map<String, dynamic> doc) {
