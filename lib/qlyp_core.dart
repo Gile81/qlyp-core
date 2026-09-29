@@ -39,3 +39,5 @@ export 'widgets/qlyp_vehicle_preview.dart';
 export 'pricing/zone_service_activation.dart';
 export 'models/bidding/marketplace_bid_view.dart';
 export 'models/bidding/firm_price_breakdown.dart';
+export 'models/faq_item.dart';
+export 'services/faq_service.dart';
