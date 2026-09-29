@@ -190,6 +190,50 @@ void main() {
   });
 
   // -------------------------------------------------------------------------
+  // Zone filtering -- multi-zone driver (matchesZones)
+  // -------------------------------------------------------------------------
+
+  group('Announcement.matchesZones -- multi-zone driver', () {
+    test('driver in [A, B] sees announcement targeted at B', () {
+      expect(
+        _makeAnnouncement(zoneIds: ['zone-b'])
+            .matchesZones(['zone-a', 'zone-b']),
+        isTrue,
+      );
+    });
+
+    test('driver in [A, B] does NOT see announcement targeted at C', () {
+      expect(
+        _makeAnnouncement(zoneIds: ['zone-c'])
+            .matchesZones(['zone-a', 'zone-b']),
+        isFalse,
+      );
+    });
+
+    test('all-zones announcement visible for driver with empty zone list', () {
+      expect(
+        _makeAnnouncement(zoneIds: []).matchesZones([]),
+        isTrue,
+      );
+    });
+
+    test('zone-targeted announcement NOT visible when driver zones are empty', () {
+      expect(
+        _makeAnnouncement(zoneIds: ['zone-a']).matchesZones([]),
+        isFalse,
+      );
+    });
+
+    test('all-zones announcement always visible for any driver zones', () {
+      expect(
+        _makeAnnouncement(zoneIds: [])
+            .matchesZones(['zone-a', 'zone-b', 'zone-c']),
+        isTrue,
+      );
+    });
+  });
+
+  // -------------------------------------------------------------------------
   // isCurrentlyActive -- date window
   // -------------------------------------------------------------------------
 

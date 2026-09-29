@@ -9,7 +9,7 @@ import '../models/announcement.dart';
 ///   - not deleted
 ///   - time window: start_at <= now < end_at
 ///   - audience matches [appType]
-///   - zone matches [zoneId] (see Announcement.matchesZone)
+///   - zone matches (see Announcement.matchesZones)
 ///
 /// Results are sorted via Announcement.compare (alert first, then newer first).
 /// Network failures are swallowed -- the stream emits an empty list on error.
@@ -18,20 +18,32 @@ class AnnouncementService {
 
   static const _collection = 'announcements';
 
-  /// Streams active announcements visible to [appType] in [zoneId].
+  /// Streams active announcements visible to [appType] in the given zone(s).
   ///
-  /// [appType] : 'customer' | 'driver'
-  /// [zoneId]  : current zone ID, or null/empty when unknown
-  ///             (only all-zone announcements shown when zoneId is empty)
+  /// [appType]     : 'customer' | 'driver'
+  /// [userZoneIds] : all ZRS zones of the user (e.g. driver registered in
+  ///                 several zones).  Empty list = zone unknown; only
+  ///                 all-zone announcements are returned.
+  /// [zoneId]      : convenience single-zone parameter (kept for backward
+  ///                 compat with customer callers).  When [userZoneIds] is
+  ///                 provided it takes precedence; otherwise [zoneId] is
+  ///                 wrapped into a one-element list.
   static Stream<List<Announcement>> streamActiveFor({
     required String appType,
     String? zoneId,
+    List<String>? userZoneIds,
   }) {
+    // Resolve effective zone list once; userZoneIds wins over zoneId.
+    final zones = userZoneIds ??
+        (zoneId == null || zoneId.trim().isEmpty
+            ? const <String>[]
+            : [zoneId.trim()]);
+
     return FirebaseFirestore.instance
         .collection(_collection)
         .where('enable', isEqualTo: true)
         .snapshots()
-        .map((snap) => _filter(snap, appType, zoneId))
+        .map((snap) => _filter(snap, appType, zones))
         .handleError((Object e) {
       debugPrint('AnnouncementService.streamActiveFor: $e');
       return <Announcement>[];
@@ -41,7 +53,7 @@ class AnnouncementService {
   static List<Announcement> _filter(
     QuerySnapshot<Map<String, dynamic>> snap,
     String appType,
-    String? zoneId,
+    List<String> userZoneIds,
   ) {
     final now = DateTime.now();
     final list = <Announcement>[];
@@ -50,7 +62,7 @@ class AnnouncementService {
       if (a.isDeleted) continue;
       if (!now.isAfter(a.startAt) || !now.isBefore(a.endAt)) continue;
       if (!a.visibleFor(appType)) continue;
-      if (!a.matchesZone(zoneId)) continue;
+      if (!a.matchesZones(userZoneIds)) continue;
       list.add(a);
     }
     list.sort(Announcement.compare);

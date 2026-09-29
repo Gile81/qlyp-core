@@ -88,10 +88,19 @@ class Announcement {
   /// - [userZoneId] null/empty => only visible if [zoneIds] is empty.
   bool matchesZone(String? userZoneId) {
     final zone = (userZoneId ?? '').trim();
-    return visibleInZones(
-      zoneIds,
-      userZoneIds: zone.isEmpty ? const [] : [zone],
-    );
+    return matchesZones(zone.isEmpty ? const [] : [zone]);
+  }
+
+  /// True when this announcement is visible to a user whose zones are [userZoneIds].
+  ///
+  /// Use this variant when the user may belong to several ZRS zones (e.g. driver)
+  /// so that a zone-targeted announcement becomes visible if any of [userZoneIds]
+  /// is in the announcement zone list.
+  ///
+  /// - [zoneIds] empty         => visible everywhere (all zones).
+  /// - [userZoneIds] empty     => only visible if [zoneIds] is empty.
+  bool matchesZones(List<String> userZoneIds) {
+    return visibleInZones(zoneIds, userZoneIds: userZoneIds);
   }
 
   // -----------------------------------------------------------------------
