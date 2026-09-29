@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../utils/zone_visibility.dart';
 
 /// CMS announcement (S4-6c-1).
 ///
@@ -82,13 +83,15 @@ class Announcement {
 
   /// True when this announcement applies to [userZoneId].
   ///
+  /// Delegates to [visibleInZones] (S4-6g-2).
   /// - [zoneIds] empty       => visible everywhere (all zones).
   /// - [userZoneId] null/empty => only visible if [zoneIds] is empty.
   bool matchesZone(String? userZoneId) {
-    if (zoneIds.isEmpty) return true;
     final zone = (userZoneId ?? '').trim();
-    if (zone.isEmpty) return false;
-    return zoneIds.contains(zone);
+    return visibleInZones(
+      zoneIds,
+      userZoneIds: zone.isEmpty ? const [] : [zone],
+    );
   }
 
   // -----------------------------------------------------------------------

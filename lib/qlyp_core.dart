@@ -34,6 +34,7 @@ export 'services/notification_service.dart';
 export 'services/places_service.dart';
 export 'services/qlyp_address_formatter.dart';
 export 'utils/canada_geo.dart';
+export 'utils/zone_visibility.dart';
 export 'widgets/qlyp_menu_bento_tile.dart';
 export 'widgets/qlyp_vehicle_preview.dart';
 export 'pricing/zone_service_activation.dart';
