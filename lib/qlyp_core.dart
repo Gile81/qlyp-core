@@ -41,3 +41,7 @@ export 'models/bidding/marketplace_bid_view.dart';
 export 'models/bidding/firm_price_breakdown.dart';
 export 'models/faq_item.dart';
 export 'services/faq_service.dart';
+// S4-6c-1 — Annonces + Mode maintenance
+export 'models/announcement.dart';
+export 'services/announcement_service.dart';
+export 'services/maintenance_service.dart';
