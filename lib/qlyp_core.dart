@@ -15,6 +15,7 @@ export 'models/rating_route_model.dart';
 export 'models/trip.dart';
 export 'models/trip_route_model.dart';
 export 'models/route_trip_search_models.dart';
+export 'models/route_booking_models.dart';
 export 'models/onboarding_slide.dart';
 export 'models/user.dart';
 export 'models/vehicle.dart';

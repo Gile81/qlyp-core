@@ -1,4 +1,5 @@
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:qlyp_core/models/route_booking_models.dart';
 import 'package:qlyp_core/models/route_trip_search_models.dart';
 import 'package:qlyp_core/services/qlyp_firebase_functions.dart';
 
@@ -225,5 +226,53 @@ class QlypRouteApi {
         'getRouteTripDetail',
         payload,
         RouteTripDetail.fromJson,
+      );
+
+  Future<RouteBookSeatResult> bookRouteSeat(Map<String, dynamic> payload) =>
+      _call(
+        'bookRouteSeat',
+        payload,
+        RouteBookSeatResult.fromJson,
+      );
+
+  Future<RouteBookingPaymentConfirmResult> confirmRouteBookingPayment({
+    required String bookingId,
+  }) =>
+      _call(
+        'confirmRouteBookingPayment',
+        {'bookingId': bookingId},
+        RouteBookingPaymentConfirmResult.fromJson,
+      );
+
+  Future<RouteBookingRespondResult> respondRouteBooking({
+    required String bookingId,
+    required bool accept,
+  }) =>
+      _call(
+        'respondRouteBooking',
+        {'bookingId': bookingId, 'accept': accept},
+        RouteBookingRespondResult.fromJson,
+      );
+
+  Future<RouteBookingCancelResult> cancelRouteBooking({
+    required String bookingId,
+    String? reason,
+  }) =>
+      _call(
+        'cancelRouteBooking',
+        {
+          'bookingId': bookingId,
+          if (reason != null && reason.trim().isNotEmpty) 'reason': reason.trim(),
+        },
+        RouteBookingCancelResult.fromJson,
+      );
+
+  Future<RouteBookingNoShowResult> reportRouteNoShow({
+    required String bookingId,
+  }) =>
+      _call(
+        'reportRouteNoShow',
+        {'bookingId': bookingId},
+        RouteBookingNoShowResult.fromJson,
       );
 }
