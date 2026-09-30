@@ -104,3 +104,36 @@ class RouteBookingNoShowResult {
         status: json['status']?.toString() ?? '',
       );
 }
+
+
+class RouteArrivalConfirmResult {
+  const RouteArrivalConfirmResult({
+    required this.bookingId,
+    required this.status,
+    required this.completed,
+  });
+
+  final String bookingId;
+  final String status;
+  final bool completed;
+
+  factory RouteArrivalConfirmResult.fromJson(Map<String, dynamic> json) =>
+      RouteArrivalConfirmResult(
+        bookingId: json['bookingId']?.toString() ?? '',
+        status: json['status']?.toString() ?? '',
+        completed: json['completed'] == true,
+      );
+}
+
+class RouteRatingSubmitResult {
+  const RouteRatingSubmitResult({required this.bookingId, required this.ratingId});
+
+  final String bookingId;
+  final String ratingId;
+
+  factory RouteRatingSubmitResult.fromJson(Map<String, dynamic> json) =>
+      RouteRatingSubmitResult(
+        bookingId: json['bookingId']?.toString() ?? '',
+        ratingId: json['ratingId']?.toString() ?? '',
+      );
+}

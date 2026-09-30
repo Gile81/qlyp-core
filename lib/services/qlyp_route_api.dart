@@ -267,6 +267,45 @@ class QlypRouteApi {
         RouteBookingCancelResult.fromJson,
       );
 
+
+  Future<void> verifyRouteBoardingOtp({
+    required String bookingId,
+    required String code,
+  }) async {
+    try {
+      await _functions.httpsCallable('verifyRouteBoardingOtp').call({
+        'bookingId': bookingId,
+        'code': code,
+      });
+    } on FirebaseFunctionsException catch (e) {
+      throw QlypRouteApiException(_localizedMessage(e), reason: _reason(e));
+    }
+  }
+
+  Future<RouteArrivalConfirmResult> confirmRouteArrival({
+    required String bookingId,
+  }) =>
+      _call(
+        'confirmRouteArrival',
+        {'bookingId': bookingId},
+        RouteArrivalConfirmResult.fromJson,
+      );
+
+  Future<RouteRatingSubmitResult> rateRouteBooking({
+    required String bookingId,
+    required int score,
+    String? comment,
+  }) =>
+      _call(
+        'rateRouteBooking',
+        {
+          'bookingId': bookingId,
+          'score': score,
+          if (comment != null && comment.trim().isNotEmpty) 'comment': comment.trim(),
+        },
+        RouteRatingSubmitResult.fromJson,
+      );
+
   Future<RouteBookingNoShowResult> reportRouteNoShow({
     required String bookingId,
   }) =>
