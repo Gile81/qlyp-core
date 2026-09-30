@@ -32,6 +32,7 @@ export 'services/qlyp_service_marker_registry.dart';
 export 'services/qlyp_vehicle_image_api.dart';
 export 'services/notification_service.dart';
 export 'services/places_service.dart';
+export 'services/qlyp_route_api.dart';
 export 'services/qlyp_address_formatter.dart';
 export 'utils/canada_geo.dart';
 export 'utils/zone_visibility.dart';
