@@ -1,4 +1,5 @@
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:qlyp_core/models/route_trip_search_models.dart';
 import 'package:qlyp_core/services/qlyp_firebase_functions.dart';
 
 class RouteDocumentIssue {
@@ -209,4 +210,20 @@ class QlypRouteApi {
       throw QlypRouteApiException(_localizedMessage(e), reason: _reason(e));
     }
   }
+
+  Future<RouteTripSearchResponse> searchRouteTrips(
+    Map<String, dynamic> payload,
+  ) =>
+      _call(
+        'searchRouteTrips',
+        payload,
+        RouteTripSearchResponse.fromJson,
+      );
+
+  Future<RouteTripDetail> getRouteTripDetail(Map<String, dynamic> payload) =>
+      _call(
+        'getRouteTripDetail',
+        payload,
+        RouteTripDetail.fromJson,
+      );
 }
