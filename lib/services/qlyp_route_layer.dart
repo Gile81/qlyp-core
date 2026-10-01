@@ -23,7 +23,8 @@ List<Object> _zoomLineWidthExpression(List<double> stops) {
 
 /// Visual weight of the route polyline.
 ///
-/// [preview] — booking card / home preview (~35% thinner than legacy, Uber-like).
+/// [preview] — booking card / home preview (0.72× legacy; slightly more visible
+///   than Uber/Lyft booking previews, still below [navigation] weight).
 ///   Includes the animated emerald → blue flow pulse (pickup → dropoff).
 /// [navigation] — live tracking / driver nav (slightly thicker, static line).
 enum QlypRouteLineProfile {
@@ -60,27 +61,11 @@ List<double> _scaleWidthStops(List<double> stops, double factor) {
   return scaled;
 }
 
-const List<double> _mainLineWidthStopsPreview =
-    // 0.65× legacy — matches Uber/Lyft booking preview thinness.
-    [
-  4, 0.975,
-  8, 1.625,
-  10, 2.6,
-  12, 3.9,
-  14, 5.85,
-  16, 8.45,
-  18, 11.7,
-];
+final List<double> _mainLineWidthStopsPreview =
+    _scaleWidthStops(_legacyMainLineWidthStops, 0.72);
 
-const List<double> _casingLineWidthStopsPreview = [
-  4, 1.365,
-  8, 2.275,
-  10, 3.64,
-  12, 5.46,
-  14, 8.19,
-  16, 11.83,
-  18, 16.38,
-];
+final List<double> _casingLineWidthStopsPreview =
+    _scaleWidthStops(_legacyCasingLineWidthStops, 0.72);
 
 final List<double> _mainLineWidthStopsNavigation =
     _scaleWidthStops(_legacyMainLineWidthStops, 0.9);
