@@ -47,5 +47,8 @@ export 'models/faq_item.dart';
 export 'services/faq_service.dart';
 // S4-6c-1 — Annonces + Mode maintenance
 export 'models/announcement.dart';
+export 'models/cast_item.dart';
 export 'services/announcement_service.dart';
+export 'services/cast_repository.dart';
 export 'services/maintenance_service.dart';
+export 'utils/cast_feed.dart';
