@@ -144,3 +144,102 @@ List<HubEvent> filterHubEventsForDisplay({
     return true;
   }).toList();
 }
+
+/// Driver Hub « Sorties à venir » (timed endings + in-progress all-day).
+class DriverUpcomingExits {
+  const DriverUpcomingExits({
+    required this.endingSoon,
+    required this.allDayInProgress,
+  });
+
+  /// Timed events with [timeKnown] whose [endAt] falls within the window.
+  final List<HubEvent> endingSoon;
+
+  /// All-day / date-only events currently in progress (max 5, sorted by title).
+  final List<HubEvent> allDayInProgress;
+
+  bool get isEmpty => endingSoon.isEmpty && allDayInProgress.isEmpty;
+}
+
+DriverUpcomingExits driverUpcomingExits(
+  List<HubEvent> events,
+  DateTime now, {
+  int hours = 12,
+}) {
+  final windowEnd = now.add(Duration(hours: hours));
+  final endingSoon = <HubEvent>[];
+  final allDay = <HubEvent>[];
+
+  for (final e in events) {
+    if (e.timeKnown) {
+      if (e.endAt.isBefore(now)) continue;
+      if (e.endAt.isAfter(windowEnd)) continue;
+      endingSoon.add(e);
+    } else {
+      final inProgress =
+          !now.isBefore(e.startAt) && !now.isAfter(e.endAt);
+      if (inProgress) allDay.add(e);
+    }
+  }
+
+  endingSoon.sort((a, b) => a.endAt.compareTo(b.endAt));
+  allDay.sort(
+    (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+  );
+
+  return DriverUpcomingExits(
+    endingSoon: endingSoon,
+    allDayInProgress: allDay.take(5).toList(),
+  );
+}
+
+/// Merge multi-zone ER documents (dedupe facilities, combine stale flag).
+HubErStatus mergeErStatuses(List<HubErStatus> statuses) {
+  if (statuses.isEmpty) {
+    throw ArgumentError.value(statuses, 'statuses', 'must not be empty');
+  }
+  final first = statuses.first;
+  final byFacility = <String, HubErItem>{};
+
+  for (final status in statuses) {
+    for (final item in status.items) {
+      final id = item.facilityId.trim();
+      if (id.isEmpty) continue;
+      final existing = byFacility[id];
+      if (existing == null) {
+        byFacility[id] = item;
+        continue;
+      }
+      final eo = existing.occupancyPct;
+      final no = item.occupancyPct;
+      if (eo == null && no != null) {
+        byFacility[id] = item;
+      } else if (eo != null && no != null && no > eo) {
+        byFacility[id] = item;
+      }
+    }
+  }
+
+  var sourceExtractAt = first.sourceExtractAt;
+  var ingestedAt = first.ingestedAt;
+  var stale = first.stale;
+  for (final s in statuses) {
+    if (s.sourceExtractAt.isAfter(sourceExtractAt)) {
+      sourceExtractAt = s.sourceExtractAt;
+    }
+    if (s.ingestedAt.isAfter(ingestedAt)) {
+      ingestedAt = s.ingestedAt;
+    }
+    stale = stale || s.stale;
+  }
+
+  return HubErStatus(
+    zoneId: first.zoneId,
+    sourceExtractAt: sourceExtractAt,
+    ingestedAt: ingestedAt,
+    stale: stale,
+    items: sortErItems(byFacility.values.toList()),
+    attributionFr: first.attributionFr,
+    attributionEn: first.attributionEn,
+  );
+}

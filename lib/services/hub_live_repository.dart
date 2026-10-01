@@ -8,9 +8,12 @@ import '../utils/hub_live_display.dart';
 /// Read-only hub live feeds (`hub_events`, `hub_er_status`).
 class HubLiveRepository {
   HubLiveRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+      : _firestoreOverride = firestore;
 
-  final FirebaseFirestore _firestore;
+  final FirebaseFirestore? _firestoreOverride;
+
+  FirebaseFirestore get _firestore =>
+      _firestoreOverride ?? FirebaseFirestore.instance;
 
   static const _eventsCollection = 'hub_events';
   static const _erCollection = 'hub_er_status';
@@ -85,6 +88,35 @@ class HubLiveRepository {
     return _firestore.collection(_erCollection).doc(id).snapshots().map((snap) {
       if (!snap.exists || snap.data() == null) return null;
       return HubErStatus.fromFirestore(snap.data()!, snap.id);
+    });
+  }
+
+  /// Reads `hub_er_status/{zoneId}` for each work zone (`whereIn` document id).
+  Stream<List<HubErStatus>> erStatusesStream(List<String> zoneIds) {
+    final ids = zoneIds.map((z) => z.trim()).where((z) => z.isNotEmpty).toList();
+    if (ids.isEmpty) {
+      return Stream.value(const <HubErStatus>[]);
+    }
+
+    final effectiveIds = ids.length > maxZoneIdsForQuery
+        ? ids.sublist(0, maxZoneIdsForQuery)
+        : ids;
+    if (ids.length > maxZoneIdsForQuery) {
+      debugPrint(
+        'HubLiveRepository.erStatusesStream: truncated zoneIds from '
+        '${ids.length} to $maxZoneIdsForQuery',
+      );
+    }
+
+    return _firestore
+        .collection(_erCollection)
+        .where(FieldPath.documentId, whereIn: effectiveIds)
+        .snapshots()
+        .map((snap) {
+      return snap.docs
+          .where((doc) => doc.data().isNotEmpty)
+          .map((doc) => HubErStatus.fromFirestore(doc.data(), doc.id))
+          .toList();
     });
   }
 }

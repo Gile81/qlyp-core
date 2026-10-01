@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:qlyp_core/models/hub_er_status.dart';
 import 'package:qlyp_core/models/hub_event.dart';
+import 'package:qlyp_core/services/hub_live_repository.dart';
 import 'package:qlyp_core/utils/hub_live_display.dart';
 
 /// Matches `writeOneEvent` payload in functions/src/hub-live/ingest-events-core.ts
@@ -278,6 +279,114 @@ void main() {
         ),
       ]);
       expect(items.map((e) => e.facilityId), ['c', 'b', 'a']);
+    });
+  });
+
+  group('mergeErStatuses', () {
+    test('dedupes facility across zones and combines stale', () {
+      final now = DateTime.utc(2026, 10, 1, 12, 0);
+      final older = DateTime.utc(2026, 10, 1, 10, 0);
+      final a = HubErStatus(
+        zoneId: 'zone_a',
+        sourceExtractAt: older,
+        ingestedAt: older,
+        stale: false,
+        items: const [
+          HubErItem(
+            facilityId: 'chum',
+            name: 'CHUM A',
+            occupancyPct: 70,
+            onStretcher: null,
+            over24h: null,
+            level: HubErLevel.orange,
+          ),
+        ],
+        attributionFr: 'FR A',
+        attributionEn: 'EN A',
+      );
+      final b = HubErStatus(
+        zoneId: 'zone_b',
+        sourceExtractAt: now,
+        ingestedAt: now,
+        stale: true,
+        items: const [
+          HubErItem(
+            facilityId: 'chum',
+            name: 'CHUM B',
+            occupancyPct: 90,
+            onStretcher: null,
+            over24h: null,
+            level: HubErLevel.red,
+          ),
+          HubErItem(
+            facilityId: 'other',
+            name: 'Other',
+            occupancyPct: null,
+            onStretcher: null,
+            over24h: null,
+            level: null,
+          ),
+        ],
+        attributionFr: 'FR B',
+        attributionEn: 'EN B',
+      );
+      final merged = mergeErStatuses([a, b]);
+      expect(merged.stale, isTrue);
+      expect(merged.sourceExtractAt, now);
+      expect(merged.items.map((e) => e.facilityId), ['chum', 'other']);
+      expect(merged.items.first.occupancyPct, 90);
+      expect(merged.items.last.occupancyPct, isNull);
+      expect(merged.attributionFr, 'FR A');
+    });
+  });
+
+  group('driverUpcomingExits', () {
+    test('12h window sorted by end and all-day group capped at 5', () {
+      final now = DateTime.utc(2026, 10, 1, 18, 0);
+      final late = HubEvent.fromFirestore(
+        sampleHubEventFirestoreMap(
+          startAt: DateTime.utc(2026, 10, 1, 20, 0),
+          endAt: DateTime.utc(2026, 10, 1, 23, 0),
+        ),
+        'late',
+      );
+      final soon = HubEvent.fromFirestore(
+        sampleHubEventFirestoreMap(
+          startAt: DateTime.utc(2026, 10, 1, 17, 0),
+          endAt: DateTime.utc(2026, 10, 1, 21, 45),
+        ),
+        'soon',
+      );
+      final tooFar = HubEvent.fromFirestore(
+        sampleHubEventFirestoreMap(
+          startAt: DateTime.utc(2026, 10, 2, 6, 0),
+          endAt: DateTime.utc(2026, 10, 2, 8, 0),
+        ),
+        'far',
+      );
+      final allDay = HubEvent.fromFirestore(
+        sampleHubEventFirestoreMap(
+          startAt: DateTime.utc(2026, 10, 1, 4, 0),
+          endAt: DateTime.utc(2026, 10, 2, 3, 59, 59, 999),
+          timeKnown: false,
+        ),
+        'fest',
+      );
+      final out = driverUpcomingExits(
+        [late, soon, tooFar, allDay],
+        now,
+        hours: 12,
+      );
+      expect(out.endingSoon.map((e) => e.id), ['soon', 'late']);
+      expect(out.allDayInProgress.map((e) => e.id), ['fest']);
+    });
+  });
+
+  group('HubLiveRepository.erStatusesStream', () {
+    test('empty zone list yields empty stream value', () async {
+      final repo = HubLiveRepository();
+      final list = await repo.erStatusesStream(const []).first;
+      expect(list, isEmpty);
     });
   });
 
