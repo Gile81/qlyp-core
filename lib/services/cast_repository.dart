@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-
 import '../models/cast_item.dart';
 import '../utils/cast_feed.dart';
 
@@ -30,11 +28,7 @@ class CastRepository {
             audience: audience,
             userZoneIds: userZoneIds,
           ),
-        )
-        .handleError((Object e) {
-      debugPrint('CastRepository.stream: $e');
-      return <CastItem>[];
-    });
+        );
   }
 
   static List<CastItem> _mapSnapshot(
