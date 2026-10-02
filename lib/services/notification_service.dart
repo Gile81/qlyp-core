@@ -54,6 +54,17 @@ abstract class QlypNotificationService {
   static const String marketplaceChannelName = 'Qlyp Marketplace';
   static const String marketplaceSoundResource = 'incoming_bid';
 
+  static const String legalZoneValidatedChannelId =
+      'qlyp_legal_zone_validated';
+  static const String legalZoneValidatedChannelNameFr =
+      'Zones de travail validées';
+  static const String legalZoneValidatedChannelNameEn =
+      'Validated work zones';
+
+  static const String legalZoneRefusedChannelId = 'qlyp_legal_zone_refused';
+  static const String legalZoneRefusedChannelNameFr = 'Zones de travail refusées';
+  static const String legalZoneRefusedChannelNameEn = 'Refused work zones';
+
   String get channelDescription => 'Qlyp alerts';
 
   NotificationTapHandler get onMessageTap;
@@ -124,6 +135,26 @@ abstract class QlypNotificationService {
           sound: const RawResourceAndroidNotificationSound(marketplaceSoundResource),
         ),
       );
+      await androidPlugin?.createNotificationChannel(
+        AndroidNotificationChannel(
+          legalZoneValidatedChannelId,
+          '$legalZoneValidatedChannelNameFr / $legalZoneValidatedChannelNameEn',
+          description: channelDescription,
+          importance: Importance.high,
+          playSound: true,
+          sound: const RawResourceAndroidNotificationSound(alertSoundResource),
+        ),
+      );
+      await androidPlugin?.createNotificationChannel(
+        AndroidNotificationChannel(
+          legalZoneRefusedChannelId,
+          '$legalZoneRefusedChannelNameFr / $legalZoneRefusedChannelNameEn',
+          description: channelDescription,
+          importance: Importance.high,
+          playSound: true,
+          sound: const RawResourceAndroidNotificationSound(alertSoundResource),
+        ),
+      );
 
       await setupInteractedMessage();
     }
@@ -175,19 +206,27 @@ abstract class QlypNotificationService {
       } else if (data['channel'] == marketplaceChannelId ||
           (data['type']?.toString().startsWith('marketplace_') ?? false)) {
         channelId = marketplaceChannelId;
+      } else if (data['type'] == 'legal_zone_validated') {
+        channelId = legalZoneValidatedChannelId;
+      } else if (data['type'] == 'legal_zone_refused') {
+        channelId = legalZoneRefusedChannelId;
       } else {
         channelId = alertChannelId;
       }
-      final channelName = channelId == dispatchChannelId
-          ? dispatchChannelName
-          : channelId == marketplaceChannelId
-              ? marketplaceChannelName
-              : alertChannelName;
-      final soundResource = channelId == dispatchChannelId
-          ? dispatchSoundResource
-          : channelId == marketplaceChannelId
-              ? marketplaceSoundResource
-              : alertSoundResource;
+      final channelName = switch (channelId) {
+        dispatchChannelId => dispatchChannelName,
+        marketplaceChannelId => marketplaceChannelName,
+        legalZoneValidatedChannelId =>
+          '$legalZoneValidatedChannelNameFr / $legalZoneValidatedChannelNameEn',
+        legalZoneRefusedChannelId =>
+          '$legalZoneRefusedChannelNameFr / $legalZoneRefusedChannelNameEn',
+        _ => alertChannelName,
+      };
+      final soundResource = switch (channelId) {
+        dispatchChannelId => dispatchSoundResource,
+        marketplaceChannelId => marketplaceSoundResource,
+        _ => alertSoundResource,
+      };
 
       final androidDetails = AndroidNotificationDetails(
         channelId,
