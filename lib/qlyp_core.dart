@@ -41,6 +41,7 @@ export 'utils/canada_geo.dart';
 export 'utils/zone_visibility.dart';
 export 'widgets/qlyp_menu_bento_tile.dart';
 export 'widgets/qlyp_vehicle_preview.dart';
+export 'widgets/qlyp_bottom_sheet.dart';
 export 'pricing/zone_service_activation.dart';
 export 'models/bidding/marketplace_bid_view.dart';
 export 'models/bidding/firm_price_breakdown.dart';
