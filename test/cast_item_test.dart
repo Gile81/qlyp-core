@@ -37,6 +37,7 @@ void main() {
       expect(item.enable, isTrue);
       expect(item.isOffer, isTrue);
       expect(item.offerCode, 'SAVE10');
+      expect(item.couponId, isEmpty);
       expect(item.zoneIds, ['zone-mtl']);
       expect(item.mediaUrl, 'https://cdn.example/a.webp');
       expect(item.thumbnail, 'https://cdn.example/t.webp');
@@ -76,6 +77,27 @@ void main() {
       final item = CastItem.fromFirestore({}, 'x');
       expect(item.enable, isTrue);
       expect(item.isDeleted, isFalse);
+    });
+
+    test('reads couponId from Firestore', () {
+      final item = CastItem.fromFirestore(
+        {
+          'title': 'Offer',
+          'isOffer': true,
+          'offerCode': 'ABC',
+          'couponId': 'coupon-doc-1',
+        },
+        'cast-2',
+      );
+      expect(item.couponId, 'coupon-doc-1');
+    });
+
+    test('couponId empty when absent', () {
+      final item = CastItem.fromFirestore(
+        {'title': 'No coupon link', 'offerCode': 'X'},
+        'cast-3',
+      );
+      expect(item.couponId, isEmpty);
     });
   });
 }

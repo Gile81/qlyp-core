@@ -22,6 +22,7 @@ CastItem _item({
     thumbnail: '',
     externalLink: '',
     offerCode: '',
+    couponId: '',
     isOffer: isOffer,
     enable: enable,
     isDeleted: isDeleted,

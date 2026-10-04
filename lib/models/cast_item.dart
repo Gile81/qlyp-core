@@ -11,6 +11,7 @@ class CastItem {
     required this.thumbnail,
     required this.externalLink,
     required this.offerCode,
+    required this.couponId,
     required this.isOffer,
     required this.enable,
     required this.isDeleted,
@@ -31,6 +32,8 @@ class CastItem {
   final String thumbnail;
   final String externalLink;
   final String offerCode;
+  /// Linked admin coupon document id (COUP-2-bis); empty when unset.
+  final String couponId;
   final bool isOffer;
   final bool enable;
   final bool isDeleted;
@@ -69,6 +72,7 @@ class CastItem {
       thumbnail: _readString(data, ['thumbnail']),
       externalLink: _readString(data, ['externalLink', 'link']),
       offerCode: _readString(data, ['offerCode', 'promoCode', 'code']),
+      couponId: _readString(data, ['couponId', 'coupon_id']),
       isOffer: data['isOffer'] == true,
       enable: data['enable'] != false,
       isDeleted: data['isDeleted'] == true,
