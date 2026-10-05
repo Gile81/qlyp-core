@@ -21,11 +21,13 @@ class QlypSnackbar {
     QlypSnackbarType type = QlypSnackbarType.info,
     String? title,
     Duration? duration,
+    BuildContext? context,
   }) {
     final String text = message.trim();
     if (text.isEmpty) return;
 
-    final BuildContext? ctx = Get.overlayContext ?? Get.context;
+    final BuildContext? ctx =
+        context ?? Get.overlayContext ?? Get.context;
     if (ctx == null) return;
 
     _dismiss(immediate: true);
@@ -53,6 +55,11 @@ class QlypSnackbar {
     return Duration(milliseconds: ms.clamp(3200, 9000));
   }
 
+  @visibleForTesting
+  static void dismissImmediate() {
+    _dismiss(immediate: true);
+  }
+
   static Future<void> _dismiss({required bool immediate}) async {
     _timer?.cancel();
     _timer = null;
@@ -72,7 +79,7 @@ class QlypSnackbar {
     switch (type) {
       case QlypSnackbarType.success:
         return _SnackbarPalette(
-          accent: isDark ? const Color(0xFF1BAF52) : QlypColors.emerald,
+          accent: isDark ? QlypColors.emeraldSuccess : QlypColors.emerald,
           icon: PhosphorIconsFill.checkCircle,
           tint: isDark
               ? QlypColors.emerald.withValues(alpha: 0.14)
@@ -198,7 +205,7 @@ class _QlypSnackbarOverlayState extends State<_QlypSnackbarOverlay> {
                   0,
                 ),
                 child: Material(
-                  color: Colors.transparent,
+                  color: QlypColors.transparent,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       color: surface,

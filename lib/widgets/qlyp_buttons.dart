@@ -178,7 +178,7 @@ class _QlypSecondaryButtonState extends State<QlypSecondaryButton> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: fill ?? Colors.transparent,
+            color: fill ?? QlypColors.transparent,
             border: border,
             boxShadow: shadow,
             borderRadius: BorderRadius.circular(QlypStyle.buttonRadius),

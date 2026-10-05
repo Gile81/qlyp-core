@@ -11,6 +11,7 @@ class QlypColors {
   static const Color midnight = Color(0xFF152838);
   static const Color deepQlyp = Color(0xFF0E1F2F);
   static const Color white = Color(0xFFFFFFFF);
+  static const Color transparent = Color(0x00000000);
   static const Color midnightMid = Color(0xFF1F3E63);
   static const Color steelBlue = Color(0xFFB8D4E8);
   static const Color softGreen = Color(0xFFCCDFC8);
@@ -56,7 +57,9 @@ class QlypColors {
   static const List<Color> gradientHeroDark = [midnightQlyp, midnightMid];
   static const List<Color> gradientDeepDark = [deepQlyp, midnight];
   static const List<Color> gradientPearl = [pearl, white];
-  static const List<Color> gradientSuccess = [emerald, Color(0xFF1BAF52)];
+  static const Color emeraldSuccess = Color(0xFF1BAF52);
+  static const List<Color> gradientSuccess = [emerald, emeraldSuccess];
+  static const Color scrim54 = Color(0x8A000000);
   static const List<Color> gradientSplashPilote = [
     Color(0xFF1A3150),
     Color(0xFF0C1B26),

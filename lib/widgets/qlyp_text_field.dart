@@ -11,6 +11,7 @@ import '../constants/qlyp_motion.dart';
 class QlypTextField extends StatefulWidget {
   final String? hintText;
   final String? labelText;
+  final String? errorText;
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final IconData? prefixIcon;
@@ -34,6 +35,7 @@ class QlypTextField extends StatefulWidget {
     super.key,
     this.hintText,
     this.labelText,
+    this.errorText,
     this.controller,
     this.focusNode,
     this.prefixIcon,
@@ -202,9 +204,15 @@ class _QlypTextFieldState extends State<QlypTextField> {
     );
   }
 
+  bool get _hasError =>
+      widget.errorText != null && widget.errorText!.trim().isNotEmpty;
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final borderColor = _hasError
+        ? QlypColors.red
+        : (_focused ? QlypColors.emerald : QlypColors.grayLight);
 
     return CompositedTransformTarget(
       link: _link,
@@ -236,12 +244,10 @@ class _QlypTextFieldState extends State<QlypTextField> {
                       : QlypColors.grayVeryLight,
                   borderRadius: BorderRadius.circular(_radius),
                   border: Border.all(
-                    color: _focused
-                        ? QlypColors.emerald
-                        : QlypColors.grayLight,
-                    width: _focused ? 1.5 : 1,
+                    color: borderColor,
+                    width: _focused || _hasError ? 1.5 : 1,
                   ),
-                  boxShadow: _focused
+                  boxShadow: _focused && !_hasError
                       ? [
                           BoxShadow(
                             color: QlypColors.emerald.withValues(alpha: 0.14),
@@ -294,6 +300,13 @@ class _QlypTextFieldState extends State<QlypTextField> {
                   ],
                 ),
               ),
+              if (_hasError) ...[
+                const SizedBox(height: 6),
+                Text(
+                  widget.errorText!,
+                  style: textTheme.bodySmall?.copyWith(color: QlypColors.red),
+                ),
+              ],
             ],
           );
         },

@@ -15,8 +15,8 @@ Future<T?> showQlypBottomSheet<T>({
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: isScrollControlled,
-    backgroundColor: Colors.transparent,
-    barrierColor: Colors.black54,
+    backgroundColor: QlypColors.transparent,
+    barrierColor: QlypColors.scrim54,
     sheetAnimationStyle: AnimationStyle(
       duration: kDurSheet,
       reverseDuration: kDurSheet,
