@@ -10,6 +10,7 @@ class QlypAnimations {
   static const String packageAssetPrefix = 'packages/qlyp_core/assets';
   static const String animationsPath = '$packageAssetPrefix/animations';
 
+  static const String loading = '$animationsPath/loading.json';
   static const String radarPulse = '$animationsPath/radar_pulse.json';
   static const String searchingDriver = '$animationsPath/searching_driver.json';
   static const String successCheck = '$animationsPath/success_check.json';
