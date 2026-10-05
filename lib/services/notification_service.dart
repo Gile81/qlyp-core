@@ -112,7 +112,9 @@ abstract class QlypNotificationService {
           description: channelDescription,
           importance: Importance.max,
           playSound: true,
+          enableVibration: true,
           sound: const RawResourceAndroidNotificationSound(alertSoundResource),
+          audioAttributesUsage: AudioAttributesUsage.alarm,
         ),
       );
       await androidPlugin?.createNotificationChannel(
@@ -122,7 +124,9 @@ abstract class QlypNotificationService {
           description: channelDescription,
           importance: Importance.max,
           playSound: true,
+          enableVibration: true,
           sound: const RawResourceAndroidNotificationSound(dispatchSoundResource),
+          audioAttributesUsage: AudioAttributesUsage.alarm,
         ),
       );
       await androidPlugin?.createNotificationChannel(
@@ -130,9 +134,11 @@ abstract class QlypNotificationService {
           marketplaceChannelId,
           marketplaceChannelName,
           description: channelDescription,
-          importance: Importance.defaultImportance,
+          importance: Importance.max,
           playSound: true,
+          enableVibration: true,
           sound: const RawResourceAndroidNotificationSound(marketplaceSoundResource),
+          audioAttributesUsage: AudioAttributesUsage.alarm,
         ),
       );
       await androidPlugin?.createNotificationChannel(
@@ -228,14 +234,21 @@ abstract class QlypNotificationService {
         _ => alertSoundResource,
       };
 
+      final bool alarmChannel = channelId == dispatchChannelId ||
+          channelId == marketplaceChannelId ||
+          channelId == alertChannelId;
       final androidDetails = AndroidNotificationDetails(
         channelId,
         channelName,
         channelDescription: channelDescription,
-        importance: Importance.high,
-        priority: Priority.high,
+        importance: alarmChannel ? Importance.max : Importance.high,
+        priority: alarmChannel ? Priority.max : Priority.high,
         ticker: 'ticker',
+        playSound: true,
+        enableVibration: true,
         sound: RawResourceAndroidNotificationSound(soundResource),
+        audioAttributesUsage:
+            alarmChannel ? AudioAttributesUsage.alarm : AudioAttributesUsage.notification,
       );
 
       final iosDetails = DarwinNotificationDetails(
