@@ -248,6 +248,19 @@ void main() {
       final out = tonightEvents([timedLate, allDay, timedEarly], now);
       expect(out.map((e) => e.id), ['early', 'late', 'all_day']);
     });
+
+    test('excludes timed event starting after local midnight', () {
+      final now = DateTime(2026, 10, 5, 15, 0);
+      final afterMidnight = HubEvent.fromFirestore(
+        sampleHubEventFirestoreMap(
+          startAt: DateTime(2026, 10, 6, 1, 0),
+          endAt: DateTime(2026, 10, 6, 4, 0),
+        ),
+        'after_midnight',
+      );
+      final tonight = tonightEvents([afterMidnight], now);
+      expect(tonight, isEmpty);
+    });
   });
 
   group('sortErItems', () {
