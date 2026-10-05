@@ -33,6 +33,21 @@ const Duration kDurSlider = Duration(milliseconds: 400);
 /// Radar cockpit (2200 ms).
 const Duration kDurRadarPulse = Duration(milliseconds: 2200);
 
+/// PRD GamePlan Sprint 6 — tween GPS véhicule (3 s par défaut entre deux fixes).
+const Duration kDurMarkerTween = Duration(milliseconds: 3000);
+const Duration kDurMarkerTweenMin = Duration(milliseconds: 1000);
+const Duration kDurMarkerTweenMax = Duration(milliseconds: 5000);
+const Duration kDurMarkerFrame = Duration(milliseconds: 33);
+
+/// Position live considérée périmée au-delà de 30 s sans `positionAt`.
+const Duration kRideLiveStalePosition = Duration(seconds: 30);
+
+/// Saut GPS : placement direct sans glisser (téléportation / perte de signal).
+const double kVehicleTeleportDistanceMeters = 500;
+
+/// En dessous de ce débit, le cap ne pivote pas (véhicule à l’arrêt).
+const double kVehicleBearingSpeedThresholdMps = 0.5;
+
 /// Alias legacy (pilote / apps en migration).
 @Deprecated('Use kDurPress')
 const Duration kDurXS = kDurPress;

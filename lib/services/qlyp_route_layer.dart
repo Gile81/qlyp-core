@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
+import '../constants/qlyp_motion.dart';
+import '../models/geo_lat_lng.dart';
+import '../ride_tracking/route_geometry.dart';
 import 'qlyp_map_view.dart';
 import 'qlyp_route_flow_animator.dart';
 
@@ -304,4 +307,227 @@ Future<void> fitQlypRouteBounds(
   );
 
   await map.flyTo(camera, MapAnimationOptions(duration: 1000));
+}
+
+/// Live tracking leg context (PRD §4.7 route colours).
+enum QlypLiveRouteLeg {
+  toPickup,
+  toDropoff,
+}
+
+const int _kBlueRouteLive = 0xFF3B82F6;
+
+final Map<String, List<Position>> _liveRouteFullCoordinates = {};
+
+int _liveRouteLineColor(QlypLiveRouteLeg leg) {
+  switch (leg) {
+    case QlypLiveRouteLeg.toPickup:
+      return _kEmeraldRoute;
+    case QlypLiveRouteLeg.toDropoff:
+      return _kBlueRouteLive;
+  }
+}
+
+/// Live route line (static stroke, [lineMetrics] for trim / progress).
+Future<void> addQlypLiveTrackingRouteLine(
+  MapboxMap map,
+  List<Position> coordinates, {
+  required QlypLiveRouteLeg leg,
+  String sourceId = 'qlyp-live-route',
+  String? lightPreset,
+}) async {
+  if (coordinates.length < 2) {
+    return;
+  }
+
+  _liveRouteFullCoordinates[sourceId] = List<Position>.from(coordinates);
+
+  final preset = lightPreset ?? qlypMapLightPreset(map);
+  final paint = qlypRoutePaintForPreset(
+    preset,
+    profile: QlypRouteLineProfile.navigation,
+  );
+  final widthStops = _widthStopsForProfile(QlypRouteLineProfile.navigation);
+  final lineColor = _liveRouteLineColor(leg);
+
+  await removeQlypLiveTrackingRouteLine(map, sourceId: sourceId);
+
+  final lineString = LineString(coordinates: coordinates);
+  await map.style.addSource(
+    GeoJsonSource(
+      id: sourceId,
+      data: json.encode(lineString),
+      lineMetrics: true,
+    ),
+  );
+
+  await map.style.addLayer(
+    LineLayer(
+      id: _casingLayerId(sourceId),
+      sourceId: sourceId,
+      lineCap: LineCap.ROUND,
+      lineJoin: LineJoin.ROUND,
+      lineColor: paint.casingColor,
+      lineOpacity: paint.casingOpacity,
+      lineEmissiveStrength: paint.casingEmissiveStrength,
+      lineWidthExpression: _zoomLineWidthExpression(widthStops.casing),
+    ),
+  );
+
+  await map.style.addLayer(
+    LineLayer(
+      id: _lineLayerId(sourceId),
+      sourceId: sourceId,
+      lineCap: LineCap.ROUND,
+      lineJoin: LineJoin.ROUND,
+      lineColor: lineColor,
+      lineOpacity: paint.lineOpacity,
+      lineEmissiveStrength: paint.lineEmissiveStrength,
+      lineWidthExpression: _zoomLineWidthExpression(widthStops.main),
+      lineTrimOffset: const [0, 1],
+    ),
+  );
+}
+
+Future<void> removeQlypLiveTrackingRouteLine(
+  MapboxMap map, {
+  String sourceId = 'qlyp-live-route',
+}) async {
+  _liveRouteFullCoordinates.remove(sourceId);
+  await removeQlypRouteLine(map, sourceId: sourceId);
+}
+
+/// Hides the traveled portion; [traveledFraction] in [0, 1] along the polyline.
+Future<void> updateQlypLiveRouteTraveledFraction(
+  MapboxMap map, {
+  required String sourceId,
+  required double traveledFraction,
+}) async {
+  final fraction = traveledFraction.clamp(0.0, 1.0);
+  final lineLayerId = _lineLayerId(sourceId);
+  final style = map.style;
+  if (!await style.styleLayerExists(lineLayerId)) {
+    return;
+  }
+
+  try {
+    await style.setStyleLayerProperty(
+      lineLayerId,
+      'line-trim-offset',
+      [fraction, 1.0],
+    );
+    return;
+  } catch (_) {
+    // Fallback: rewrite source geometry from closest index.
+  }
+
+  final full = _liveRouteFullCoordinates[sourceId];
+  if (full == null || full.length < 2) return;
+
+  final remaining = _slicePositionsFromFraction(full, fraction);
+  if (remaining.length < 2) return;
+
+  if (await style.styleSourceExists(sourceId)) {
+    await style.setStyleSourceProperty(
+      sourceId,
+      'data',
+      json.encode(LineString(coordinates: remaining)),
+    );
+  }
+}
+
+List<Position> _slicePositionsFromFraction(
+  List<Position> coordinates,
+  double fraction,
+) {
+  if (fraction <= 0) return List<Position>.from(coordinates);
+  if (fraction >= 1) {
+    return [coordinates.last];
+  }
+
+  final asGeo = coordinates
+      .map((p) => GeoLatLng(p.lat.toDouble(), p.lng.toDouble()))
+      .toList();
+  final totalLen = _polylineLengthMeters(asGeo);
+  if (totalLen <= 0) return List<Position>.from(coordinates);
+
+  final targetLen = totalLen * fraction;
+  var walked = 0.0;
+  for (var i = 0; i < asGeo.length - 1; i++) {
+    final seg = haversineDistanceMeters(asGeo[i], asGeo[i + 1]);
+    if (walked + seg >= targetLen) {
+      final t = seg <= 0 ? 0.0 : (targetLen - walked) / seg;
+      final lat = asGeo[i].latitude +
+          (asGeo[i + 1].latitude - asGeo[i].latitude) * t;
+      final lng = asGeo[i].longitude +
+          (asGeo[i + 1].longitude - asGeo[i].longitude) * t;
+      final tail = coordinates.sublist(i + 1);
+      return [
+        Position(lng, lat),
+        ...tail,
+      ];
+    }
+    walked += seg;
+  }
+  return [coordinates.last];
+}
+
+double _polylineLengthMeters(List<GeoLatLng> points) {
+  var sum = 0.0;
+  for (var i = 0; i < points.length - 1; i++) {
+    sum += haversineDistanceMeters(points[i], points[i + 1]);
+  }
+  return sum;
+}
+
+/// Keeps [vehicle] and [target] in view — call on phase change or recenter only.
+Future<void> fitQlypRideTrackingBounds(
+  MapboxMap map, {
+  required double vehicleLat,
+  required double vehicleLng,
+  required double targetLat,
+  required double targetLng,
+  EdgeInsets padding = const EdgeInsets.all(64),
+}) async {
+  var minLng = vehicleLng;
+  var maxLng = vehicleLng;
+  var minLat = vehicleLat;
+  var maxLat = vehicleLat;
+
+  for (final point in [
+    (vehicleLng, vehicleLat),
+    (targetLng, targetLat),
+  ]) {
+    final lng = point.$1;
+    final lat = point.$2;
+    if (lng < minLng) minLng = lng;
+    if (lng > maxLng) maxLng = lng;
+    if (lat < minLat) minLat = lat;
+    if (lat > maxLat) maxLat = lat;
+  }
+
+  final bounds = CoordinateBounds(
+    southwest: Point(coordinates: Position(minLng, minLat)),
+    northeast: Point(coordinates: Position(maxLng, maxLat)),
+    infiniteBounds: false,
+  );
+
+  final camera = await map.cameraForCoordinateBounds(
+    bounds,
+    MbxEdgeInsets(
+      top: padding.top,
+      left: padding.left,
+      bottom: padding.bottom,
+      right: padding.right,
+    ),
+    null,
+    null,
+    null,
+    null,
+  );
+
+  await map.flyTo(
+    camera,
+    MapAnimationOptions(duration: kDurPage.inMilliseconds),
+  );
 }
