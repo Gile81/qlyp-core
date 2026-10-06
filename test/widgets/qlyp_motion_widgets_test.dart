@@ -6,10 +6,7 @@ import 'package:qlyp_core/config/qlyp_theme.dart';
 import 'package:qlyp_core/constants/qlyp_motion.dart';
 import 'package:qlyp_core/widgets/qlyp_accordion.dart';
 import 'package:qlyp_core/widgets/qlyp_hero.dart';
-import 'package:qlyp_core/widgets/qlyp_list_tile.dart';
 import 'package:qlyp_core/widgets/qlyp_map_button.dart';
-import 'package:qlyp_core/widgets/qlyp_overlay_entrance.dart';
-import 'package:qlyp_core/widgets/qlyp_segmented_control.dart';
 import 'package:qlyp_core/widgets/qlyp_slide_in.dart';
 import 'package:qlyp_core/widgets/qlyp_switch.dart';
 
@@ -19,7 +16,7 @@ void main() {
   testWidgets('QlypTheme page transitions builder', (tester) async {
     final theme = QlypTheme.light();
     expect(
-      theme.pageTransitionsTheme!.builders[TargetPlatform.android],
+      theme.pageTransitionsTheme.builders[TargetPlatform.android],
       isA<QlypSlidePageTransitionsBuilder>(),
     );
   });
