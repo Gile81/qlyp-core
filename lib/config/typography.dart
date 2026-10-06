@@ -55,6 +55,12 @@ TextTheme qlypTextTheme() {
       letterSpacing: 0.3,
       height: 1.00,
     ),
+    labelMedium: GoogleFonts.inter(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.2,
+      height: 1.00,
+    ),
     labelSmall: GoogleFonts.inter(
       fontSize: 12,
       fontWeight: FontWeight.w500,
@@ -100,6 +106,19 @@ class QlypTypography {
               (brightness == Brightness.dark
                   ? QlypColors.onDarkPrimary
                   : QlypColors.textPrimary),
+        );
+  }
+
+  /// Libellé bouton petit (14 / w500) — actions en ligne.
+  static TextStyle buttonLabelSmall({
+    Color? color,
+    Brightness brightness = Brightness.light,
+  }) {
+    return qlypTextTheme().labelMedium!.copyWith(
+          color: color ??
+              (brightness == Brightness.dark
+                  ? QlypColors.onDarkPrimary
+                  : QlypColors.midnightQlyp),
         );
   }
 

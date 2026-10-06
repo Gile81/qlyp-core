@@ -1,4 +1,5 @@
-export 'qlyp_bottom_sheet.dart' show QlypBottomSheetVariant, showQlypBottomSheet;
+export 'qlyp_bottom_sheet.dart'
+    show QlypBottomSheetVariant, QlypSheetLayout, showQlypBottomSheet;
 
 import 'package:flutter/material.dart';
 
@@ -12,12 +13,14 @@ class QlypGlassSheet {
     required BuildContext context,
     required WidgetBuilder builder,
     QlypBottomSheetVariant variant = QlypBottomSheetVariant.light,
+    QlypSheetLayout layout = QlypSheetLayout.floating,
     bool isScrollControlled = true,
   }) =>
       showQlypBottomSheet<T>(
         context: context,
         builder: builder,
         variant: variant,
+        layout: layout,
         isScrollControlled: isScrollControlled,
       );
 }

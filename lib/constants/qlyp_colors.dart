@@ -107,6 +107,23 @@ class QlypStyle {
   static const double chipRadius = 20.0;
   static const double sheetRadius = 24.0;
   static const double serviceSheetRadius = 20.0;
+  static const double sheetFloatingMargin = 12.0;
+  static const double sheetMaxHeightFraction = 0.9;
+
+  static const double buttonHeightLarge = 52.0;
+  static const double buttonHeightMedium = 44.0;
+  static const double buttonHeightSmall = 36.0;
+
+  static const double buttonPaddingHorizontalLarge = 20.0;
+  static const double buttonPaddingHorizontalMedium = 16.0;
+  static const double buttonPaddingHorizontalSmall = 12.0;
+
+  static const double buttonIconSizeLarge = 20.0;
+  static const double buttonIconSizeMedium = 20.0;
+  static const double buttonIconSizeSmall = 18.0;
+
+  static const double iconButtonSize = 44.0;
+  static const double iconButtonIconSize = 20.0;
 
   static LinearGradient get brandGradient => const LinearGradient(
         colors: QlypColors.gradientBrand,

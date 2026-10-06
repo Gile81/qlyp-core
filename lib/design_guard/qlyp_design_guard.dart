@@ -6,11 +6,20 @@ class QlypDesignGuard {
     required this.libRoot,
     List<String>? foundationWhitelist,
     this.deprecatedCoreTokens = defaultDeprecatedCoreTokens,
+    this.optionalSheetEscapePatternIds = const [],
   }) : foundationWhitelist = foundationWhitelist ?? defaultFoundationWhitelist;
 
   final Directory libRoot;
   final List<String> foundationWhitelist;
   final List<String> deprecatedCoreTokens;
+
+  final List<String> optionalSheetEscapePatternIds;
+
+  static const defaultOptionalSheetEscapePatternIds = <String>[
+    'escape_modal_bottom_sheet',
+    'escape_get_bottom_sheet',
+    'escape_show_bottom_sheet',
+  ];
 
   static const defaultFoundationWhitelist = <String>[
     'lib/constants/qlyp_colors.dart',
@@ -18,6 +27,7 @@ class QlypDesignGuard {
     'lib/constants/qlyp_animations.dart',
     'lib/config/typography.dart',
     'lib/config/qlyp_theme.dart',
+    'lib/widgets/qlyp_buttons.dart',
   ];
 
   static const defaultDeprecatedCoreTokens = <String>[
@@ -37,6 +47,13 @@ class QlypDesignGuard {
     'curves', 'circular_progress', 'linear_progress', 'ink_well',
     'elevated_button', 'text_button', 'app_colors', 'deprecated_core', 'google_fonts',
   ];
+
+  Iterable<String> get _allPatternIds sync* {
+    yield* patternIds;
+    if (optionalSheetEscapePatternIds.isNotEmpty) {
+      yield* optionalSheetEscapePatternIds;
+    }
+  }
 
   Map<String, Map<String, int>> scanCounts() {
     final packageRoot = libRoot.parent;
@@ -75,7 +92,7 @@ class QlypDesignGuard {
       final counts = entry.value;
       final rawBase = baselineFiles[file];
       if (rawBase == null) {
-        for (final p in patternIds) {
+        for (final p in _allPatternIds) {
           final n = counts[p] ?? 0;
           if (n > 0) errors.add('NEW_FILE $file: $p ($n)');
         }
@@ -84,7 +101,7 @@ class QlypDesignGuard {
       final base = (rawBase as Map).map(
         (k, v) => MapEntry(k.toString(), (v as num).toInt()),
       );
-      for (final p in patternIds) {
+      for (final p in _allPatternIds) {
         final n = counts[p] ?? 0;
         final b = base[p] ?? 0;
         if (n > b) errors.add('$file: $p count $n > baseline $b');
@@ -104,17 +121,22 @@ class QlypDesignGuard {
     return decoded;
   }
 
-  static void writeBaseline(File file, Map<String, Map<String, int>> counts) {
+  static void writeBaseline(
+    File file,
+    Map<String, Map<String, int>> counts, {
+    List<String> extraPatternIds = const [],
+  }) {
     final sorted = Map<String, Map<String, int>>.fromEntries(
       counts.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
     );
+    final ids = [...patternIds, ...extraPatternIds];
     final payload = <String, dynamic>{
       'version': 1,
       'files': sorted.map(
         (path, patternCounts) => MapEntry(
           path,
           Map<String, int>.fromEntries(
-            patternIds.map((p) => MapEntry(p, patternCounts[p] ?? 0)),
+            ids.map((p) => MapEntry(p, patternCounts[p] ?? 0)),
           ),
         ),
       ),
@@ -126,7 +148,7 @@ class QlypDesignGuard {
   }
 
   Map<String, int> _countFile(Directory packageRoot, File file) {
-    final counts = {for (final p in patternIds) p: 0};
+    final counts = {for (final p in _allPatternIds) p: 0};
     final rel = _relativePath(packageRoot, file);
     for (final hit in _hitsInFile(rel, file)) {
       counts[hit.patternId] = (counts[hit.patternId] ?? 0) + 1;
@@ -162,6 +184,18 @@ class QlypDesignGuard {
       for (final token in deprecatedCoreTokens) {
         if (line.contains(token)) add('deprecated_core');
       }
+      if (optionalSheetEscapePatternIds.contains('escape_modal_bottom_sheet') &&
+          line.contains('showModalBottomSheet')) {
+        add('escape_modal_bottom_sheet');
+      }
+      if (optionalSheetEscapePatternIds.contains('escape_get_bottom_sheet') &&
+          line.contains('Get.bottomSheet')) {
+        add('escape_get_bottom_sheet');
+      }
+      if (optionalSheetEscapePatternIds.contains('escape_show_bottom_sheet') &&
+          line.contains('showBottomSheet')) {
+        add('escape_show_bottom_sheet');
+      }
       if (line.contains('GoogleFonts.')) add('google_fonts');
     }
     return hits;
@@ -195,11 +229,13 @@ List<String> runDesignGuardCheck({
   required File baselineFile,
   List<String>? foundationWhitelist,
   List<String>? deprecatedCoreTokens,
+  List<String>? optionalSheetEscapePatternIds,
 }) {
   final guard = QlypDesignGuard(
     libRoot: Directory('${packageRoot.path}/lib'),
     foundationWhitelist: foundationWhitelist,
     deprecatedCoreTokens: deprecatedCoreTokens ?? QlypDesignGuard.defaultDeprecatedCoreTokens,
+    optionalSheetEscapePatternIds: optionalSheetEscapePatternIds ?? const [],
   );
   final baseline = QlypDesignGuard.loadBaseline(baselineFile);
   final actual = guard.scanCounts();
