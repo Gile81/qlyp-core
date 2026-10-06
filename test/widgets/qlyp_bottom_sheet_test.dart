@@ -86,6 +86,38 @@ void main() {
     );
   });
 
+  testWidgets('non-dismissible sheet ignores barrier tap', (tester) async {
+    await tester.pumpWidget(
+      wrapDesignTest(
+        child: Builder(
+          builder: (context) {
+            return QlypTextButton(
+              label: 'lock',
+              onPressed: () {
+                showQlypBottomSheet<void>(
+                  context: context,
+                  isDismissible: false,
+                  enableDrag: false,
+                  builder: (_) => const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Text('Verrouillé'),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
+    await tester.tap(find.text('lock'));
+    await tester.pumpAndSettle();
+    expect(find.text('Verrouillé'), findsOneWidget);
+
+    await tester.tapAt(const Offset(20, 20));
+    await tester.pumpAndSettle();
+    expect(find.text('Verrouillé'), findsOneWidget);
+  });
+
   testWidgets('keyboard inset lifts floating sheet', (tester) async {
     tester.view.viewInsets = const FakeViewPadding(bottom: 280);
     addTearDown(tester.view.resetViewInsets);

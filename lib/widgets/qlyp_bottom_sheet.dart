@@ -15,10 +15,14 @@ Future<T?> showQlypBottomSheet<T>({
   QlypBottomSheetVariant variant = QlypBottomSheetVariant.light,
   QlypSheetLayout layout = QlypSheetLayout.floating,
   bool isScrollControlled = true,
+  bool isDismissible = true,
+  bool enableDrag = true,
 }) {
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: isScrollControlled,
+    isDismissible: isDismissible,
+    enableDrag: enableDrag,
     backgroundColor: QlypColors.transparent,
     barrierColor: QlypColors.scrim54,
     sheetAnimationStyle: AnimationStyle(

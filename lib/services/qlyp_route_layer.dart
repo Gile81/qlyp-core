@@ -132,14 +132,6 @@ QlypRoutePaint qlypRoutePaintForPreset(
         lineEmissiveStrength: 1.0,
         casingEmissiveStrength: 0.35,
       );
-    case 'dusk':
-      return QlypRoutePaint(
-        casingColor: _kDeepQlypRoute,
-        casingOpacity: 0.42,
-        lineColor: _kEmeraldRoute,
-        lineOpacity: flowEnabled ? 0.82 : 1.0,
-        lineEmissiveStrength: 0.45,
-      );
     default:
       return QlypRoutePaint(
         casingColor: _kDeepQlypRoute,

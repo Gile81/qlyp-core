@@ -7,9 +7,8 @@
     "qlyp:font": "Inter (natif Standard)",
     "qlyp:traffic": "showTrafficLayers activé nativement, pas de recoloration custom pour linstant",
     "qlyp:presets": [
-      "day (6h-20h)",
-      "dusk (20h-22h)",
-      "night (22h-6h)"
+      "day (6h-20h local)",
+      "night (20h-6h local)"
     ],
     "qlyp:flutter_switch": "voir qlyp_map_view.dart _applyTheme()"
   },

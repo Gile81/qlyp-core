@@ -65,12 +65,12 @@
       "deprecated_core": 0,
       "google_fonts": 0
     },
-    "lib/services/qlyp_map_view.dart": {
+    "lib/services/qlyp_map_mode_controller.dart": {
       "color_hex": 0,
-      "colors_material": 1,
+      "colors_material": 0,
       "font_size": 0,
       "font_weight": 0,
-      "duration": 1,
+      "duration": 2,
       "curves": 0,
       "circular_progress": 0,
       "linear_progress": 0,
