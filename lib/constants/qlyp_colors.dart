@@ -94,46 +94,6 @@ class QlypColors {
   static const Color pilierQlypRouteIcon = violet;
   static const Color qlypDeepPurple = Color(0xFF2A114B);
   static const Color qlypDark = Color(0xFF180018);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color qlypPrimaryFreshGreen = Color(0xFF25BA58);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color qlypSecondaryWarmSand = Color(0xFFE0B787);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color qlypPrimarySunYellow = Color(0xFFFBC12B);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color qlypOffWhite = Color(0xFFEFF3F3);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color qlypCharcoal = Color(0xFF1E1E1E);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color qlypMint = Color(0xFF80D09F);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color qlypCoolGray = Color(0xFFAAB6BA);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color qlypSlate = Color(0xFF5F6E76);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color qlypRed = Color(0xFFFF0000);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color grey50 = Color(0xFFFFFFFF);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color grey100 = Color(0xFFF3F4F6);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color grey200 = Color(0xFFE5E7EB);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color grey300 = Color(0xFFD1D5DB);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color grey400 = Color(0xFF9CA3AF);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color grey500 = Color(0xFF6B7280);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color grey600 = Color(0xFF4B5563);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color grey700 = Color(0xFF374151);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color grey800 = Color(0xFF1F2937);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color grey900 = Color(0xFF111827);
-  @Deprecated('GoRide legacy — pilote migration DESIGN-1b')
-  static const Color danger200 = Color(0xFFFF7277);
 }
 
 /// Shared visual tokens: emerald gradient + floating elevation.

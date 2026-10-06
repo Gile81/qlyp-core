@@ -5,6 +5,7 @@ export 'config/typography.dart';
 export 'constants/qlyp_animations.dart';
 export 'constants/qlyp_colors.dart';
 export 'constants/qlyp_motion.dart';
+export 'design_guard/qlyp_design_guard.dart';
 export 'constants/ride_tracking_contract.dart';
 export 'constants/qlyp_routes.dart';
 export 'constants/qlyp_vehicle_category_assets.dart';

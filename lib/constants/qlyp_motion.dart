@@ -48,14 +48,6 @@ const double kVehicleTeleportDistanceMeters = 500;
 /// En dessous de ce débit, le cap ne pivote pas (véhicule à l’arrêt).
 const double kVehicleBearingSpeedThresholdMps = 0.5;
 
-/// Alias legacy (pilote / apps en migration).
-@Deprecated('Use kDurPress')
-const Duration kDurXS = kDurPress;
+/// Alias legacy — encore utilisé par qlyp-client (S5-6-apps le remplacera).
 @Deprecated('Use kDurTab')
 const Duration kDurS = kDurTab;
-@Deprecated('Use kDurList')
-const Duration kDurProgress = kDurList;
-@Deprecated('Use kDurHero')
-const Duration kDurL = kDurHero;
-@Deprecated('Use kDurSlider')
-const Duration kDurXL = kDurSlider;

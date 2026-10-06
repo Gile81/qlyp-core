@@ -37,7 +37,7 @@ class _QlypMenuBentoTileState extends State<QlypMenuBentoTile> {
     final iconColor =
         isDark ? QlypColors.onDarkPrimary : QlypColors.midnightQlyp;
     final chevronColor =
-        isDark ? QlypColors.onDarkSecondary : QlypColors.grey400;
+        isDark ? QlypColors.onDarkSecondary : QlypColors.gray;
 
     return GestureDetector(
       onTapDown: (_) => setState(() => _pressed = true),
@@ -46,7 +46,7 @@ class _QlypMenuBentoTileState extends State<QlypMenuBentoTile> {
       onTap: widget.onTap,
       child: AnimatedScale(
         scale: _pressed ? 0.95 : 1.0,
-        duration: kDurXS,
+        duration: kDurPress,
         curve: kQlypSpring,
         child: Container(
           padding: EdgeInsets.symmetric(
