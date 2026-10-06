@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../constants/qlyp_colors.dart' show QlypColors, QlypStyle;
+import 'qlyp_page_transitions.dart';
 import 'typography.dart';
 
 /// Thèmes clair / sombre (alias explicites pour les apps).
@@ -39,6 +40,7 @@ class QlypTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
+      pageTransitionsTheme: qlypPageTransitionsTheme(),
       colorScheme: colorScheme,
       scaffoldBackgroundColor: QlypColors.pearl,
       canvasColor: QlypColors.pearl,
@@ -190,6 +192,7 @@ class QlypTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      pageTransitionsTheme: qlypPageTransitionsTheme(),
       colorScheme: colorScheme,
       scaffoldBackgroundColor: QlypColors.midnight,
       canvasColor: QlypColors.midnight,

@@ -125,6 +125,14 @@ class QlypStyle {
   static const double iconButtonSize = 44.0;
   static const double iconButtonIconSize = 20.0;
 
+  static const double slideInOffset = 24.0;
+  static const double overlayEntranceScaleFrom = 0.92;
+  static const double switchTrackWidth = 48.0;
+  static const double switchTrackHeight = 28.0;
+  static const double switchThumbSize = 22.0;
+  static const double segmentedControlHeight = 40.0;
+  static const double mapButtonSize = 48.0;
+
   static LinearGradient get brandGradient => const LinearGradient(
         colors: QlypColors.gradientBrand,
         begin: Alignment.topLeft,

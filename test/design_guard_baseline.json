@@ -145,6 +145,22 @@
       "deprecated_core": 0,
       "google_fonts": 0
     },
+    "lib/widgets/qlyp_accordion.dart": {
+      "color_hex": 0,
+      "colors_material": 3,
+      "font_size": 0,
+      "font_weight": 0,
+      "duration": 0,
+      "curves": 0,
+      "circular_progress": 0,
+      "linear_progress": 0,
+      "ink_well": 0,
+      "elevated_button": 0,
+      "text_button": 0,
+      "app_colors": 0,
+      "deprecated_core": 4,
+      "google_fonts": 0
+    },
     "lib/widgets/qlyp_app_bar.dart": {
       "color_hex": 0,
       "colors_material": 2,
@@ -193,6 +209,22 @@
       "deprecated_core": 2,
       "google_fonts": 0
     },
+    "lib/widgets/qlyp_buttons.dart": {
+      "color_hex": 0,
+      "colors_material": 19,
+      "font_size": 0,
+      "font_weight": 0,
+      "duration": 0,
+      "curves": 0,
+      "circular_progress": 0,
+      "linear_progress": 0,
+      "ink_well": 0,
+      "elevated_button": 0,
+      "text_button": 2,
+      "app_colors": 0,
+      "deprecated_core": 0,
+      "google_fonts": 0
+    },
     "lib/widgets/qlyp_card.dart": {
       "color_hex": 0,
       "colors_material": 3,
@@ -225,6 +257,22 @@
       "deprecated_core": 0,
       "google_fonts": 0
     },
+    "lib/widgets/qlyp_list_tile.dart": {
+      "color_hex": 0,
+      "colors_material": 2,
+      "font_size": 0,
+      "font_weight": 0,
+      "duration": 0,
+      "curves": 0,
+      "circular_progress": 0,
+      "linear_progress": 0,
+      "ink_well": 0,
+      "elevated_button": 0,
+      "text_button": 0,
+      "app_colors": 0,
+      "deprecated_core": 0,
+      "google_fonts": 0
+    },
     "lib/widgets/qlyp_loading.dart": {
       "color_hex": 0,
       "colors_material": 1,
@@ -233,6 +281,22 @@
       "duration": 0,
       "curves": 0,
       "circular_progress": 1,
+      "linear_progress": 0,
+      "ink_well": 0,
+      "elevated_button": 0,
+      "text_button": 0,
+      "app_colors": 0,
+      "deprecated_core": 0,
+      "google_fonts": 0
+    },
+    "lib/widgets/qlyp_map_button.dart": {
+      "color_hex": 0,
+      "colors_material": 7,
+      "font_size": 0,
+      "font_weight": 0,
+      "duration": 0,
+      "curves": 0,
+      "circular_progress": 0,
       "linear_progress": 0,
       "ink_well": 0,
       "elevated_button": 0,
@@ -273,6 +337,38 @@
       "deprecated_core": 0,
       "google_fonts": 0
     },
+    "lib/widgets/qlyp_segmented_control.dart": {
+      "color_hex": 0,
+      "colors_material": 3,
+      "font_size": 0,
+      "font_weight": 0,
+      "duration": 0,
+      "curves": 0,
+      "circular_progress": 0,
+      "linear_progress": 0,
+      "ink_well": 0,
+      "elevated_button": 0,
+      "text_button": 0,
+      "app_colors": 0,
+      "deprecated_core": 0,
+      "google_fonts": 0
+    },
+    "lib/widgets/qlyp_slide_in.dart": {
+      "color_hex": 0,
+      "colors_material": 0,
+      "font_size": 0,
+      "font_weight": 0,
+      "duration": 0,
+      "curves": 0,
+      "circular_progress": 0,
+      "linear_progress": 0,
+      "ink_well": 0,
+      "elevated_button": 0,
+      "text_button": 0,
+      "app_colors": 0,
+      "deprecated_core": 1,
+      "google_fonts": 0
+    },
     "lib/widgets/qlyp_snackbar.dart": {
       "color_hex": 0,
       "colors_material": 18,
@@ -287,6 +383,22 @@
       "text_button": 0,
       "app_colors": 0,
       "deprecated_core": 2,
+      "google_fonts": 0
+    },
+    "lib/widgets/qlyp_switch.dart": {
+      "color_hex": 0,
+      "colors_material": 3,
+      "font_size": 0,
+      "font_weight": 0,
+      "duration": 0,
+      "curves": 0,
+      "circular_progress": 0,
+      "linear_progress": 0,
+      "ink_well": 0,
+      "elevated_button": 0,
+      "text_button": 0,
+      "app_colors": 0,
+      "deprecated_core": 0,
       "google_fonts": 0
     },
     "lib/widgets/qlyp_text_field.dart": {

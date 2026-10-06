@@ -7,6 +7,7 @@ class QlypDesignGuard {
     List<String>? foundationWhitelist,
     this.deprecatedCoreTokens = defaultDeprecatedCoreTokens,
     this.optionalSheetEscapePatternIds = const [],
+    this.optionalAppWidgetPatternIds = const [],
   }) : foundationWhitelist = foundationWhitelist ?? defaultFoundationWhitelist;
 
   final Directory libRoot;
@@ -14,6 +15,15 @@ class QlypDesignGuard {
   final List<String> deprecatedCoreTokens;
 
   final List<String> optionalSheetEscapePatternIds;
+  final List<String> optionalAppWidgetPatternIds;
+
+  static const defaultOptionalAppWidgetPatternIds = <String>[
+    'escape_expansion_tile',
+    'escape_list_tile',
+    'escape_switch',
+    'escape_segmented_button',
+    'escape_floating_action_button',
+  ];
 
   static const defaultOptionalSheetEscapePatternIds = <String>[
     'escape_modal_bottom_sheet',
@@ -27,7 +37,9 @@ class QlypDesignGuard {
     'lib/constants/qlyp_animations.dart',
     'lib/config/typography.dart',
     'lib/config/qlyp_theme.dart',
-    'lib/widgets/qlyp_buttons.dart',
+    'lib/config/qlyp_page_transitions.dart',
+    'lib/config/qlyp_page_transition.dart',
+    'lib/motion/qlyp_motion_accessibility.dart',
   ];
 
   static const defaultDeprecatedCoreTokens = <String>[
@@ -52,6 +64,9 @@ class QlypDesignGuard {
     yield* patternIds;
     if (optionalSheetEscapePatternIds.isNotEmpty) {
       yield* optionalSheetEscapePatternIds;
+    }
+    if (optionalAppWidgetPatternIds.isNotEmpty) {
+      yield* optionalAppWidgetPatternIds;
     }
   }
 
@@ -230,12 +245,14 @@ List<String> runDesignGuardCheck({
   List<String>? foundationWhitelist,
   List<String>? deprecatedCoreTokens,
   List<String>? optionalSheetEscapePatternIds,
+  List<String>? optionalAppWidgetPatternIds,
 }) {
   final guard = QlypDesignGuard(
     libRoot: Directory('${packageRoot.path}/lib'),
     foundationWhitelist: foundationWhitelist,
     deprecatedCoreTokens: deprecatedCoreTokens ?? QlypDesignGuard.defaultDeprecatedCoreTokens,
     optionalSheetEscapePatternIds: optionalSheetEscapePatternIds ?? const [],
+    optionalAppWidgetPatternIds: optionalAppWidgetPatternIds ?? const [],
   );
   final baseline = QlypDesignGuard.loadBaseline(baselineFile);
   final actual = guard.scanCounts();

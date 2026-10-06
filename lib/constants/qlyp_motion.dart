@@ -13,6 +13,17 @@ const Duration kDurTab = Duration(milliseconds: 250);
 /// Listes / accordéons (280 ms).
 const Duration kDurList = Duration(milliseconds: 280);
 
+/// Contenu qui glisse depuis la droite (PRD §3.6, 250–300 ms).
+const Duration kDurSlideIn = Duration(milliseconds: 280);
+
+/// Décalage entre lignes en cascade (accordéon cockpit).
+const Duration kDurSlideInStagger = Duration(milliseconds: 40);
+
+Duration kDurSlideInStaggerAt(int index) {
+  if (index <= 0) return Duration.zero;
+  return Duration(milliseconds: kDurSlideInStagger.inMilliseconds * index);
+}
+
 /// Transitions de page / focus champ (300 ms).
 const Duration kDurPage = Duration(milliseconds: 300);
 const Duration kDurOverlay = Duration(milliseconds: 300);
