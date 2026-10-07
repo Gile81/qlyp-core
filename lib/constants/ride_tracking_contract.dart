@@ -25,6 +25,10 @@ abstract final class RideTrackingContract {
   static const String fieldEtaComputedAt = 'etaComputedAt';
   static const String fieldRoutePolyline6 = 'routePolyline6';
   static const String fieldRouteComputedAt = 'routeComputedAt';
+  static const String fieldNextStopIndex = 'nextStopIndex';
+  static const String fieldNextStopEtaSeconds = 'nextStopEtaSeconds';
+  static const String fieldNextStopDistanceMeters = 'nextStopDistanceMeters';
+  static const String fieldNextStopEtaComputedAt = 'nextStopEtaComputedAt';
   static const String fieldDriverFirstName = 'driverFirstName';
   static const String fieldDriverPhotoUrl = 'driverPhotoUrl';
   static const String fieldRatingAvg = 'ratingAvg';

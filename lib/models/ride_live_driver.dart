@@ -1,6 +1,7 @@
 import '../constants/qlyp_motion.dart';
 import '../constants/ride_tracking_contract.dart';
 import '../models/ride_eta.dart';
+import '../models/ride_live_next_stop.dart';
 import '../models/ride_phase.dart';
 import '../utils/ride_tracking_parse.dart';
 
@@ -16,6 +17,7 @@ class RideLiveDriver {
     this.eta,
     this.routePolyline6,
     this.routeComputedAt,
+    this.nextStop,
   });
 
   final double? lat;
@@ -27,6 +29,7 @@ class RideLiveDriver {
   final RideEta? eta;
   final String? routePolyline6;
   final DateTime? routeComputedAt;
+  final RideLiveNextStop? nextStop;
 
   bool get hasPosition => lat != null && lng != null;
 
@@ -62,6 +65,7 @@ class RideLiveDriver {
       routeComputedAt: rideTrackingTimestamp(
         map[RideTrackingContract.fieldRouteComputedAt],
       ),
+      nextStop: RideLiveNextStop.fromLiveDriverMap(map),
     );
   }
 }
