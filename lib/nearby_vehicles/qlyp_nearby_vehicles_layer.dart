@@ -9,7 +9,7 @@ import 'package:qlyp_core/nearby_vehicles/nearby_vehicle_marker_resolve.dart';
 import 'package:qlyp_core/nearby_vehicles/nearby_vehicles_constants.dart';
 import 'package:qlyp_core/nearby_vehicles/qlyp_nearby_vehicles_controller.dart';
 import 'package:qlyp_core/ride_tracking/vehicle_marker_motion.dart';
-import 'package:qlyp_core/services/qlyp_marker_renderer.dart';
+import 'package:qlyp_core/services/qlyp_map_style_images.dart';
 import 'package:qlyp_core/services/qlyp_service_marker_registry.dart';
 
 /// Draws [QlypNearbyVehiclesController] vehicles on a Mapbox map (S6-9b).
@@ -152,26 +152,16 @@ class QlypNearbyVehiclesLayer {
   Future<void> _ensureStyleImage(String styleId, String filename) async {
     if (_iconBytesByStyleId.containsKey(styleId)) return;
     final assetPath = QlypServiceMarkerRegistry.assetPathForFilename(filename);
-    final bytes =
-        await QlypMarkerRenderer.renderSvgMarkerRaw(assetPath, sizePx: 64);
-    if (bytes.isEmpty) return;
-    _iconBytesByStyleId[styleId] = bytes;
-
     final map = _map;
     if (map == null) return;
-    try {
-      await map.style.addStyleImage(
-        styleId,
-        3.0,
-        MbxImage(width: 64, height: 64, data: bytes),
-        false,
-        [],
-        [],
-        null,
-      );
-    } catch (_) {
-      // Already registered.
-    }
+    final ok = await addQlypMapStyleImageFromSvgAsset(
+      map,
+      id: styleId,
+      svgAssetPath: assetPath,
+      sizePx: kQlypMapMarkerSizeVehiclePx,
+    );
+    if (!ok) return;
+    _iconBytesByStyleId[styleId] = Uint8List(0);
   }
 
   void _startFramePump() {
