@@ -14,11 +14,16 @@ Future<List<Position>> fetchMapboxDrivingRoutePositions({
   required double sourceLongitude,
   required double destinationLatitude,
   required double destinationLongitude,
+  List<({double lat, double lng})> viaPoints = const [],
 }) async {
   if (accessToken.trim().isEmpty) return const [];
 
-  final coords =
-      '$sourceLongitude,$sourceLatitude;$destinationLongitude,$destinationLatitude';
+  final chain = <String>[
+    '$sourceLongitude,$sourceLatitude',
+    ...viaPoints.map((p) => '${p.lng},${p.lat}'),
+    '$destinationLongitude,$destinationLatitude',
+  ];
+  final coords = chain.join(';');
   final url = Uri.parse(
     'https://api.mapbox.com/directions/v5/mapbox/driving/$coords'
     '?geometries=geojson&overview=full&access_token=${Uri.encodeComponent(accessToken)}',
