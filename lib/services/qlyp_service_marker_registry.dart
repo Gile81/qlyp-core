@@ -36,6 +36,33 @@ class QlypServiceMarkerRegistry {
     return map[serviceId];
   }
 
+  /// Admin default marker filename from a parsed registry map (never hard-coded SVG names).
+  static String? defaultFilename(Map<String, String> markers) {
+    final explicit = markers['default'] ?? markers['_default'];
+    if (explicit != null && explicit.trim().isNotEmpty) {
+      return explicit.trim();
+    }
+    if (markers.isEmpty) return null;
+    final keys = markers.keys.toList()..sort();
+    for (final key in keys) {
+      if (key == 'default' || key == '_default') continue;
+      final value = markers[key];
+      if (value != null && value.trim().isNotEmpty) {
+        return value.trim();
+      }
+    }
+    return null;
+  }
+
+  /// Resolves SVG asset path for [markerServiceId], falling back to registry default.
+  Future<String?> assetPathForMarkerService(String markerServiceId) async {
+    final map = await fetch();
+    final filename =
+        map[markerServiceId.trim()] ?? defaultFilename(map);
+    if (filename == null || filename.isEmpty) return null;
+    return assetPathForFilename(filename);
+  }
+
   static String assetPathForFilename(String filename) {
     if (filename.contains('/')) {
       return filename;

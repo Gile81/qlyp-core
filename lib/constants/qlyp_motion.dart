@@ -50,6 +50,9 @@ const Duration kDurMarkerTweenMin = Duration(milliseconds: 1000);
 const Duration kDurMarkerTweenMax = Duration(milliseconds: 5000);
 const Duration kDurMarkerFrame = Duration(milliseconds: 33);
 
+/// S6-9b — nearby vehicle Firestore projection write interval (marker tween target).
+const Duration kDurNearbyVehicleServerWrite = Duration(seconds: 10);
+
 /// Position live considérée périmée au-delà de 30 s sans `positionAt`.
 const Duration kRideLiveStalePosition = Duration(seconds: 30);
 

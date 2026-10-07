@@ -82,6 +82,7 @@ class VehicleMarkerMotion {
     required bool disableAnimations,
     required DateTime now,
     bool stale = false,
+    Duration? fixedTweenDuration,
   }) {
     _stale = stale;
     final target = GeoLatLng(lat, lng);
@@ -113,7 +114,7 @@ class VehicleMarkerMotion {
     final between = positionAt != null && _lastPositionAt != null
         ? positionAt.difference(_lastPositionAt!)
         : kDurMarkerTween;
-    _tweenDuration = clampTweenDuration(between);
+    _tweenDuration = fixedTweenDuration ?? clampTweenDuration(between);
     _tweenStartedAt = now;
     _lastPositionAt = positionAt;
   }
