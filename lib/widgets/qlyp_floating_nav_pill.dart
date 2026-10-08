@@ -6,7 +6,7 @@ import '../config/typography.dart';
 import '../constants/qlyp_colors.dart';
 import '../constants/qlyp_motion.dart';
 import '../motion/qlyp_motion_accessibility.dart';
-import 'qlyp_bottom_nav.dart';
+import 'qlyp_nav_item.dart';
 
 /// Variante visuelle de la pilule flottante harmonisée client / pilote (10C).
 enum QlypFloatingNavPillVariant { light, dark }

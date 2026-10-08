@@ -193,11 +193,11 @@
       "deprecated_core": 0,
       "google_fonts": 0
     },
-    "lib/widgets/qlyp_bottom_nav.dart": {
+    "lib/widgets/qlyp_nav_item.dart": {
       "color_hex": 0,
-      "colors_material": 7,
+      "colors_material": 0,
       "font_size": 0,
-      "font_weight": 1,
+      "font_weight": 0,
       "duration": 0,
       "curves": 0,
       "circular_progress": 0,

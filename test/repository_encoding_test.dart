@@ -46,6 +46,11 @@ void main() {
 
     final failures = <String>[];
     for (final relative in paths) {
+      if (relative.endsWith('.png') ||
+          relative.endsWith('.webp') ||
+          relative.endsWith('.jpg')) {
+        continue;
+      }
       final file = File('${root.path}${Platform.pathSeparator}$relative');
       if (!file.existsSync()) continue;
       final bytes = file.readAsBytesSync();

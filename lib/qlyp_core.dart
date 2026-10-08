@@ -69,7 +69,7 @@ export 'ride_tracking/route_geometry.dart';
 export 'ride_tracking/vehicle_marker_motion.dart';
 export 'utils/zone_visibility.dart';
 export 'widgets/qlyp_app_bar.dart';
-export 'widgets/qlyp_bottom_nav.dart';
+export 'widgets/qlyp_nav_item.dart';
 export 'widgets/qlyp_floating_nav_pill.dart';
 export 'widgets/qlyp_landing_cascade.dart';
 export 'widgets/qlyp_float.dart';
