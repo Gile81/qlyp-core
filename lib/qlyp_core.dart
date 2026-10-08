@@ -61,6 +61,7 @@ export 'services/qlyp_vehicle_image_api.dart';
 export 'services/notification_service.dart';
 export 'services/places_service.dart';
 export 'services/qlyp_route_api.dart';
+export 'services/qlyp_mapbox_directions.dart';
 export 'services/qlyp_address_formatter.dart';
 export 'money/qlyp_money.dart';
 export 'utils/canada_geo.dart';

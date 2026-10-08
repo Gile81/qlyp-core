@@ -114,6 +114,10 @@ const Duration kDurHeroOut = Duration(milliseconds: 460);
 
 /// Exception validée par Gile 07/10 — accueil 10C : popups accueil / badge cloche.
 const Duration kDurPopIn = Duration(milliseconds: 750);
+
+/// Carrousel offre Cast accueil 10C (spec §2.6).
+const Duration kDurHomeBannerInterval = Duration(seconds: 4);
+const Duration kDurHomeBannerPage = Duration(milliseconds: 450);
 const Duration kDurBadgePop = Duration(milliseconds: 900);
 const Duration kDurBadgePopDelay = Duration(milliseconds: 1200);
 
