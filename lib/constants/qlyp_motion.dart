@@ -62,6 +62,66 @@ const double kVehicleTeleportDistanceMeters = 500;
 /// En dessous de ce débit, le cap ne pivote pas (véhicule à l’arrêt).
 const double kVehicleBearingSpeedThresholdMps = 0.5;
 
+/// Exception validée par Gile 07/10 — accueil 10C : atterrissage en cascade.
+const Curve kQlypLand = Cubic(0.22, 1.0, 0.36, 1.0);
+
+/// Exception validée par Gile 07/10 — accueil 10C : atterrissage d'un bloc.
+const Duration kDurLand = Duration(milliseconds: 1000);
+
+/// Exception validée par Gile 07/10 — accueil 10C : révélation d'un texte.
+const Duration kDurTextReveal = Duration(milliseconds: 1100);
+
+/// Exception validée par Gile 07/10 — accueil 10C : écart entre cartes d'un carrousel.
+const Duration kDurLandCardStep = Duration(milliseconds: 110);
+
+/// Exception validée par Gile 07/10 — accueil 10C : première carte après son bloc.
+const Duration kDurLandCardOffset = Duration(milliseconds: 120);
+
+/// Exception validée par Gile 07/10 — accueil 10C : texte après son bloc.
+const Duration kDurLandTextOffset = Duration(milliseconds: 260);
+
+/// Exception validée par Gile 07/10 — accueil 10C : pilule et barre compacte.
+const Duration kDurNavHide = Duration(milliseconds: 520);
+
+/// Exception validée par Gile 07/10 — accueil 10C : photo pilier.
+const Duration kDurPhotoReveal = Duration(milliseconds: 950);
+
+/// Exception validée par Gile 07/10 — accueil 10C : zoom lent photo pilier.
+const Duration kDurPhotoZoom = Duration(seconds: 10);
+
+/// Exception validée par Gile 07/10 — accueil 10C : demi-cycle illustrations flottantes.
+const Duration kDurFloatHalf = Duration(seconds: 3);
+
+/// Exception validée par Gile 07/10 — accueil 10C : indice carrousel piliers.
+const Duration kDurHintDelay = Duration(milliseconds: 1800);
+const Duration kDurHint = Duration(milliseconds: 1900);
+
+/// Exception validée par Gile 07/10 — accueil 10C : squelettes.
+const Duration kDurSkeletonMin = Duration(milliseconds: 2000);
+const Duration kDurSkeletonShimmer = Duration(milliseconds: 1500);
+
+/// Exception validée par Gile 07/10 — accueil 10C : tirer pour rafraîchir.
+const Duration kDurRefreshPull = Duration(milliseconds: 650);
+
+/// Exception validée par Gile 07/10 — accueil 10C : logo au rafraîchissement.
+const Duration kDurLogoDraw = Duration(milliseconds: 1100);
+const Duration kDurLogoStroke = Duration(milliseconds: 450);
+const Duration kDurLogoStrokeDelay = Duration(milliseconds: 1050);
+
+/// Exception validée par Gile 07/10 — accueil 10C : voiture popup niveau de service.
+const Duration kDurHeroIn = Duration(milliseconds: 680);
+const Duration kDurHeroOut = Duration(milliseconds: 460);
+
+/// Exception validée par Gile 07/10 — accueil 10C : popups accueil / badge cloche.
+const Duration kDurPopIn = Duration(milliseconds: 750);
+const Duration kDurBadgePop = Duration(milliseconds: 900);
+const Duration kDurBadgePopDelay = Duration(milliseconds: 1200);
+
+/// Exception validée par Gile 07/10 — accueil 10C : popup niveau de service.
+const Duration kDurPopupDimIn = Duration(milliseconds: 240);
+const Duration kDurPopupIn = Duration(milliseconds: 420);
+const Duration kDurPopupOut = Duration(milliseconds: 420);
+
 /// Alias legacy — encore utilisé par qlyp-client (S5-6-apps le remplacera).
 @Deprecated('Use kDurTab')
 const Duration kDurS = kDurTab;

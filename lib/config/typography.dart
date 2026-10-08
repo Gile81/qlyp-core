@@ -180,4 +180,19 @@ class QlypTypography {
                 ? QlypColors.onDarkSecondary
                 : QlypColors.gray,
           );
+
+  /// Exception validée par Gile 07/10 — libellé actif pilule navigation (11 px).
+  static TextStyle navPillActiveLabel({
+    Brightness brightness = Brightness.light,
+  }) {
+    return qlypTextTheme().bodySmall!.copyWith(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          letterSpacing: -0.1,
+          height: 1.0,
+          color: brightness == Brightness.dark
+              ? QlypColors.onDarkPrimary
+              : QlypColors.midnightQlyp,
+        );
+  }
 }

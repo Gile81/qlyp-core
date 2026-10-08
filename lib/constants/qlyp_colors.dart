@@ -28,10 +28,16 @@ class QlypColors {
   static const Color grayLight = Color(0xFFE5E7EB);
   static const Color grayVeryLight = Color(0xFFF3F4F6);
   static const Color grayDisabled = Color(0xFFD1D5DB);
+  /// Exception validée par Gile 07/10 — squelettes accueil 10C.
+  static const Color skeletonBase = Color(0xFFE9EEF4);
+  static const Color skeletonMid = Color(0xFFF6F8FB);
   static const Color onDarkPrimary = Color(0xF2FFFFFF);
   static const Color onDarkSecondary = Color(0x99FFFFFF);
   static const Color onDarkDisabled = Color(0x4DFFFFFF);
   static const Color glassNavClient = Color(0xC7FFFFFF);
+  /// Exception validée par Gile 07/10 — pilule flottante client (accueil 10C).
+  static const Color glassNavPillLight = Color(0xCCFFFFFF);
+  static const Color glassNavPillLightBorder = Color(0x14142C44);
   static const Color glassNavClientBorder = Color(0x14142C44);
   static const Color glassNavDriver = Color(0xE00E1F2F);
   static const Color glassNavDriverBorder = Color(0x1FFFFFFF);
@@ -132,6 +138,39 @@ class QlypStyle {
   static const double switchThumbSize = 22.0;
   static const double segmentedControlHeight = 40.0;
   static const double mapButtonSize = 48.0;
+
+  /// Exception validée par Gile 07/10 — accueil 10C.
+  static const double landOffset = 48.0;
+  static const double navPillWidth = 312.0;
+  static const double navPillHeight = 58.0;
+  static const double navPillRadius = 29.0;
+  static const double navPillGap = 6.0;
+  static const double navPillHorizontalInset = 4.0;
+  static const double navPillColumnWidth = 60.4;
+  static const double navPillCapsuleWidth = 52.4;
+  static const double navPillCapsuleHeight = 46.0;
+  static const double navPillCapsuleRadius = 23.0;
+  static const double navPillCapsuleTop = 6.0;
+  static const double navPillCapsuleInset = 8.0;
+  static const double navHideOffset = 112.0;
+  static const double floatAmplitude = 6.0;
+  static const double hintOffset = 76.0;
+  static const double refreshPull = 64.0;
+  static const double pagedRowHorizontalInset = 16.0;
+  static const double pagedRowGap = 10.0;
+  static const double pageDotSize = 6.0;
+  static const double pageDotActiveWidth = 18.0;
+  static const double pageDotActiveHeight = 6.0;
+  static const double pageDotSlideSpan = 12.0;
+
+  static List<BoxShadow> get navPillShadowLight => [
+        BoxShadow(
+          color: QlypColors.midnightQlyp.withValues(alpha: 0.25),
+          blurRadius: 30,
+          offset: const Offset(0, 10),
+          spreadRadius: -8,
+        ),
+      ];
 
   static LinearGradient get brandGradient => const LinearGradient(
         colors: QlypColors.gradientBrand,
