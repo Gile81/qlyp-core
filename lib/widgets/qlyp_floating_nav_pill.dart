@@ -13,6 +13,10 @@ enum QlypFloatingNavPillVariant { light, dark }
 
 /// Pilule de navigation flottante 312 × 58 — spec accueil 10C §2.10.
 class QlypFloatingNavPill extends StatefulWidget {
+  /// Skips [BackdropFilter] in widget/golden tests (avoids raster hangs).
+  @visibleForTesting
+  static bool goldenTestMode = false;
+
   const QlypFloatingNavPill({
     super.key,
     required this.currentIndex,
@@ -87,17 +91,18 @@ class _QlypFloatingNavPillState extends State<QlypFloatingNavPill>
     final inset =
         widget.bottomInset ?? MediaQuery.paddingOf(context).bottom;
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: inset + QlypStyle.navPillGap),
-      child: AnimatedBuilder(
-        animation: _hideOffset,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(0, _hideOffset.value),
-            child: child,
-          );
-        },
-        child: Center(
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: inset + QlypStyle.navPillGap),
+        child: AnimatedBuilder(
+          animation: _hideOffset,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(0, _hideOffset.value),
+              child: child,
+            );
+          },
           child: SizedBox(
             width: QlypStyle.navPillWidth,
             height: QlypStyle.navPillHeight,
@@ -176,25 +181,34 @@ class _PillChrome extends StatelessWidget {
     final blur = isLight
         ? QlypColors.blurNavClient
         : QlypColors.blurNavDriver;
+    final chrome = DecoratedBox(
+      decoration: BoxDecoration(
+        color: isLight
+            ? QlypColors.glassNavPillLight
+            : QlypColors.glassNavDriver,
+        borderRadius: BorderRadius.circular(QlypStyle.navPillRadius),
+        boxShadow: isLight ? QlypStyle.navPillShadowLight : null,
+        border: Border.all(
+          color: isLight
+              ? QlypColors.glassNavPillLightBorder
+              : QlypColors.glassNavDriverBorder,
+        ),
+      ),
+      child: child,
+    );
+
+    if (QlypFloatingNavPill.goldenTestMode) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(QlypStyle.navPillRadius),
+        child: chrome,
+      );
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(QlypStyle.navPillRadius),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: isLight
-                ? QlypColors.glassNavPillLight
-                : QlypColors.glassNavDriver,
-            borderRadius: BorderRadius.circular(QlypStyle.navPillRadius),
-            boxShadow: isLight ? QlypStyle.navPillShadowLight : null,
-            border: Border.all(
-              color: isLight
-                  ? QlypColors.glassNavPillLightBorder
-                  : QlypColors.glassNavDriverBorder,
-            ),
-          ),
-          child: child,
-        ),
+        child: chrome,
       ),
     );
   }

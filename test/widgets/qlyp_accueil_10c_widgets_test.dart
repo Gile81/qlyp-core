@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:qlyp_core/constants/qlyp_colors.dart';
 import 'package:qlyp_core/constants/qlyp_motion.dart';
 import 'package:qlyp_core/widgets/qlyp_floating_nav_pill.dart';
