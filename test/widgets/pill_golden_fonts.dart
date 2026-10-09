@@ -15,11 +15,11 @@ Future<void> loadPillGoldenFonts({bool phosphor = false}) async {
 
   if (phosphor) {
     await loadPackageFont(
-      'packages/phosphor_icons/PhosphorRegular',
+      'PhosphorRegular',
       'packages/phosphor_icons/lib/fonts/Phosphor.ttf',
     );
     await loadPackageFont(
-      'packages/phosphor_icons/PhosphorFill',
+      'PhosphorFill',
       'packages/phosphor_icons/lib/fonts/Phosphor-Fill.ttf',
     );
   }
@@ -37,11 +37,18 @@ Future<void> loadPillGoldenFonts({bool phosphor = false}) async {
   }
   await interLoader.load();
 
-  try {
-    final materialLoader = FontLoader('MaterialIcons')
-      ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'));
-    await materialLoader.load();
-  } catch (_) {
-    // Flutter SDK layout varies; default test binding still provides MaterialIcons.
+  const materialPaths = [
+    'packages/flutter/lib/fonts/MaterialIcons-Regular.otf',
+    'fonts/MaterialIcons-Regular.otf',
+  ];
+  for (final path in materialPaths) {
+    try {
+      final materialLoader = FontLoader('MaterialIcons')
+        ..addFont(rootBundle.load(path));
+      await materialLoader.load();
+      break;
+    } catch (_) {
+      // Try next layout.
+    }
   }
 }

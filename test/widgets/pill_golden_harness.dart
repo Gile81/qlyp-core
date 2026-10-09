@@ -9,7 +9,7 @@ const kPillGoldenSize = Size(390, 844);
 
 const materialNavItems = [
   QlypNavItem(icon: Icons.home_outlined, label: 'Accueil'),
-  QlypNavItem(icon: Icons.timeline_outlined, label: 'Activite'),
+  QlypNavItem(icon: Icons.timeline_outlined, label: 'Activité'),
   QlypNavItem(icon: Icons.payments_outlined, label: 'Gains'),
   QlypNavItem(icon: Icons.hub_outlined, label: 'Hub'),
   QlypNavItem(icon: Icons.person_outline, label: 'Compte'),
@@ -18,7 +18,7 @@ const materialNavItems = [
 const phosphorNavItems = [
   QlypNavItem(icon: PhosphorIconsRegular.house, label: 'Accueil'),
   QlypNavItem(icon: PhosphorIconsRegular.squaresFour, label: 'Services'),
-  QlypNavItem(icon: PhosphorIconsRegular.calendarBlank, label: 'Activite'),
+  QlypNavItem(icon: PhosphorIconsRegular.calendarBlank, label: 'Activité'),
   QlypNavItem(icon: PhosphorIconsRegular.usersThree, label: 'Cast'),
   QlypNavItem(icon: PhosphorIconsRegular.user, label: 'Compte'),
 ];

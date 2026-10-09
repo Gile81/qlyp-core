@@ -389,6 +389,7 @@ void main() {
           RepaintBoundary(
             key: _goldenRootKey,
             child: MaterialApp(
+              debugShowCheckedModeBanner: false,
               theme: pillGoldenTheme(),
               home: Scaffold(
                 body: Center(
@@ -426,51 +427,42 @@ void main() {
     });
 
     testWidgets('pill hide frames', (tester) async {
-      await tester.binding.setSurfaceSize(kPillGoldenSize);
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-
-      await tester.pumpWidget(
-        RepaintBoundary(
-          key: _goldenRootKey,
-          child: MaterialApp(
-            theme: pillGoldenTheme(),
-            home: Scaffold(
-              body: Align(
-                alignment: Alignment.bottomCenter,
-                child: QlypFloatingNavPill(
-                  currentIndex: 0,
-                  onTap: (_) {},
-                  items: materialNavItems,
-                  hidden: false,
-                  bottomInset: 0,
+      Future<void> pumpHidden({required bool hidden}) async {
+        await tester.pumpWidget(
+          RepaintBoundary(
+            key: _goldenRootKey,
+            child: mediaQueryShell(
+              viewBottom: 34,
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: pillGoldenTheme(),
+                home: Scaffold(
+                  body: Center(
+                    child: SizedBox(
+                      width: QlypStyle.navPillWidth + 32,
+                      height: QlypStyle.navPillHeight + 48,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: QlypFloatingNavPill(
+                          currentIndex: 0,
+                          onTap: (_) {},
+                          items: materialNavItems,
+                          hidden: hidden,
+                          bottomInset: 0,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
+        );
+      }
+
+      await pumpHidden(hidden: false);
       await tester.pumpAndSettle();
-
-      await tester.pumpWidget(
-        RepaintBoundary(
-          key: _goldenRootKey,
-          child: MaterialApp(
-            theme: pillGoldenTheme(),
-            home: Scaffold(
-              body: Align(
-                alignment: Alignment.bottomCenter,
-                child: QlypFloatingNavPill(
-                  currentIndex: 0,
-                  onTap: (_) {},
-                  items: materialNavItems,
-                  hidden: true,
-                  bottomInset: 0,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
+      await pumpHidden(hidden: true);
       await tester.pump(Duration.zero);
       await expectLater(
         _pillRoot(),
