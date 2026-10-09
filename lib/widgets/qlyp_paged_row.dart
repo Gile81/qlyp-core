@@ -40,6 +40,13 @@ class QlypPagedRow extends StatefulWidget {
     return (content - gaps) / itemsPerPage;
   }
 
+  /// Hauteur du conteneur rangée pour une tuile de [itemHeight] sans couper l'ombre.
+  static double outerHeightForItemHeight(double itemHeight) {
+    return itemHeight +
+        QlypStyle.floatingShadowClipTop +
+        QlypStyle.floatingShadowClipBottom;
+  }
+
   @override
   State<QlypPagedRow> createState() => _QlypPagedRowState();
 }
@@ -139,10 +146,17 @@ class _QlypPagedRowState extends State<QlypPagedRow>
           );
         }
 
-        final contentWidth = QlypPagedRow.contentWidthForScreen(width);
         return SizedBox(
-          width: contentWidth,
-          child: ClipRect(child: pageView),
+          width: width,
+          child: ClipRect(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: QlypStyle.floatingShadowClipTop,
+                bottom: QlypStyle.floatingShadowClipBottom,
+              ),
+              child: pageView,
+            ),
+          ),
         );
       },
     );

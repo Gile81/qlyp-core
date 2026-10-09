@@ -48,7 +48,10 @@ void main() {
     for (final relative in paths) {
       if (relative.endsWith('.png') ||
           relative.endsWith('.webp') ||
-          relative.endsWith('.jpg')) {
+          relative.endsWith('.jpg') ||
+          relative.endsWith('.ttf') ||
+          relative.endsWith('.woff') ||
+          relative.endsWith('.woff2')) {
         continue;
       }
       final file = File('${root.path}${Platform.pathSeparator}$relative');

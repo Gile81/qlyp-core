@@ -197,6 +197,11 @@ class QlypStyle {
         ),
       ];
 
+  /// Marge à préserver pour [floatingShadowLight] (flou 14, offset 0/4).
+  static const double floatingShadowClipTop = 10.0;
+  static const double floatingShadowClipBottom = 18.0;
+  static const double floatingShadowClipHorizontal = 14.0;
+
   static List<BoxShadow> get floatingShadowLight => [
         BoxShadow(
           color: Colors.black.withValues(alpha: 0.08),
