@@ -16,6 +16,9 @@ import '../models/announcement.dart';
 class AnnouncementService {
   const AnnouncementService._();
 
+  /// Overridable in tests (e.g. [FakeFirebaseFirestore]).
+  static FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   static const _collection = 'announcements';
 
   /// Streams active announcements visible to [appType] in the given zone(s).
@@ -39,7 +42,7 @@ class AnnouncementService {
             ? const <String>[]
             : [zoneId.trim()]);
 
-    return FirebaseFirestore.instance
+    return firestore
         .collection(_collection)
         .where('enable', isEqualTo: true)
         .snapshots()
