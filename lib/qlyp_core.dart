@@ -75,6 +75,7 @@ export 'widgets/qlyp_floating_nav_pill.dart';
 export 'widgets/qlyp_landing_cascade.dart';
 export 'widgets/qlyp_float.dart';
 export 'widgets/qlyp_paged_row.dart';
+export 'widgets/qlyp_side_shadow_clip.dart';
 export 'widgets/qlyp_skeleton.dart';
 export 'widgets/qlyp_logo_refresh.dart';
 export 'widgets/qlyp_bottom_sheet.dart';

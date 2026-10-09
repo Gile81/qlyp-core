@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants/qlyp_colors.dart';
 import '../constants/qlyp_motion.dart';
 import '../motion/qlyp_motion_accessibility.dart';
+import 'qlyp_side_shadow_clip.dart';
 
 /// Ligne paginee : exactement [itemsPerPage] elements visibles (accueil 10C : 3).
 class QlypPagedRow extends StatefulWidget {
@@ -38,13 +39,6 @@ class QlypPagedRow extends StatefulWidget {
     final content = contentWidthForScreen(screenWidth);
     final gaps = QlypStyle.pagedRowGap * (itemsPerPage - 1);
     return (content - gaps) / itemsPerPage;
-  }
-
-  /// Hauteur du conteneur rangée pour une tuile de [itemHeight] sans couper l'ombre.
-  static double outerHeightForItemHeight(double itemHeight) {
-    return itemHeight +
-        QlypStyle.floatingShadowClipTop +
-        QlypStyle.floatingShadowClipBottom;
   }
 
   @override
@@ -146,14 +140,13 @@ class _QlypPagedRowState extends State<QlypPagedRow>
           );
         }
 
-        return SizedBox(
-          width: width,
-          child: ClipRect(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: QlypStyle.floatingShadowClipTop,
-                bottom: QlypStyle.floatingShadowClipBottom,
-              ),
+        return QlypSideShadowClip(
+          left: QlypStyle.pagedRowSideClipLeft,
+          right: QlypStyle.pagedRowSideClipRight,
+          child: Transform.translate(
+            offset: const Offset(QlypStyle.pagedRowLeadingAlignOffset, 0),
+            child: SizedBox(
+              width: width,
               child: pageView,
             ),
           ),
