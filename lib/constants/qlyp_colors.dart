@@ -151,7 +151,7 @@ class QlypStyle {
   static const double navPillCapsuleHeight = 46.0;
   static const double navPillCapsuleRadius = 23.0;
   static const double navPillCapsuleTop = 6.0;
-  static const double navPillCapsuleInset = 8.0;
+  static const double navPillCapsuleInset = 4.0;
   static const double navHideOffset = 112.0;
   static const double floatAmplitude = 6.0;
   static const double hintOffset = 76.0;
@@ -197,14 +197,15 @@ class QlypStyle {
         ),
       ];
 
-  /// Marge à préserver pour [floatingShadowLight] (flou 14, offset 0/4).
-  static const double floatingShadowClipTop = 10.0;
-  static const double floatingShadowClipBottom = 18.0;
-  static const double floatingShadowClipHorizontal = 14.0;
+  /// Alignement planche 10F-bis-3 : 1re tuile à x=16 (PageView centré sinon x=11).
+  static const double pagedRowLeadingAlignOffset = 5.0;
+
+  static const double pagedRowSideClipLeft = 8.0;
+  static const double pagedRowSideClipRight = 382.0;
 
   static List<BoxShadow> get floatingShadowLight => [
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.08),
+          color: Colors.black.withValues(alpha: 0.06),
           blurRadius: 14,
           offset: const Offset(0, 4),
         ),

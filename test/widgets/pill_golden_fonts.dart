@@ -36,4 +36,12 @@ Future<void> loadPillGoldenFonts({bool phosphor = false}) async {
     interLoader.addFont(rootBundle.load(path));
   }
   await interLoader.load();
+
+  try {
+    final materialLoader = FontLoader('MaterialIcons')
+      ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'));
+    await materialLoader.load();
+  } catch (_) {
+    // Flutter SDK layout varies; default test binding still provides MaterialIcons.
+  }
 }

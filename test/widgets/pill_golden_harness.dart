@@ -75,6 +75,7 @@ Widget pillClientStackHarness({
     viewBottom: viewBottom,
     disableAnimations: disableAnimations,
     child: MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: pillGoldenTheme(),
       home: Scaffold(
         body: Stack(
@@ -104,6 +105,7 @@ Widget pillPiloteScaffoldHarness({
     viewBottom: viewBottom,
     disableAnimations: disableAnimations,
     child: MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: pillGoldenTheme(dark: true),
       home: Scaffold(
         extendBody: true,
@@ -127,6 +129,7 @@ Widget pillTabsPlanche({
   bool phosphor = false,
 }) {
   return MaterialApp(
+    debugShowCheckedModeBanner: false,
     theme: pillGoldenTheme(dark: variant == QlypFloatingNavPillVariant.dark),
     home: Scaffold(
       backgroundColor: variant == QlypFloatingNavPillVariant.dark

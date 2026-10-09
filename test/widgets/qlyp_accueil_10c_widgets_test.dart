@@ -23,8 +23,8 @@ Finder _pillTransform() =>
 
 void main() {
   test('QlypFloatingNavPill capsule positions', () {
-    expect(QlypFloatingNavPill.capsuleLeftForIndex(0), 8);
-    expect(QlypFloatingNavPill.capsuleLeftForIndex(2), closeTo(8 + 60.4 * 2, 0.01));
+    expect(QlypFloatingNavPill.capsuleLeftForIndex(0), 4);
+    expect(QlypFloatingNavPill.capsuleLeftForIndex(2), closeTo(4 + 60.4 * 2, 0.01));
   });
 
   testWidgets('QlypFloatingNavPill size 312x58', (tester) async {
