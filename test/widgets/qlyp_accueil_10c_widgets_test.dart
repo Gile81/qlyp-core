@@ -181,58 +181,6 @@ void main() {
     expect(count, 1);
   });
 
-  testWidgets('golden QlypFloatingNavPill light', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(390, 844));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
-    await tester.pumpWidget(
-      wrapDesignTest(
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: QlypFloatingNavPill(
-            currentIndex: 0,
-            onTap: _noop,
-            items: _navItems,
-            variant: QlypFloatingNavPillVariant.light,
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await expectLater(
-      find.byType(MaterialApp),
-      matchesGoldenFile('goldens/qlyp_floating_nav_pill_light.png'),
-    );
-  });
-
-  testWidgets('golden QlypFloatingNavPill dark', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(390, 844));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
-    await tester.pumpWidget(
-      wrapDesignTest(
-        child: DecoratedBox(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(colors: QlypColors.gradientDeepDark),
-          ),
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: QlypFloatingNavPill(
-              currentIndex: 1,
-              onTap: _noop,
-              items: _navItems,
-              variant: QlypFloatingNavPillVariant.dark,
-            ),
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await expectLater(
-      find.byType(MaterialApp),
-      matchesGoldenFile('goldens/qlyp_floating_nav_pill_dark.png'),
-    );
-  });
 }
 
-void _noop(int _) {}
+

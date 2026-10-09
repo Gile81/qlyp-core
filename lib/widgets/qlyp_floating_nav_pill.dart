@@ -14,6 +14,7 @@ enum QlypFloatingNavPillVariant { light, dark }
 /// Pilule de navigation flottante 312 × 58 — spec accueil 10C §2.10.
 class QlypFloatingNavPill extends StatefulWidget {
   /// Skips [BackdropFilter] in widget/golden tests (avoids raster hangs).
+  /// Default `false`; only golden tests may set this to `true` (reset in tearDown).
   @visibleForTesting
   static bool goldenTestMode = false;
 
@@ -93,6 +94,7 @@ class _QlypFloatingNavPillState extends State<QlypFloatingNavPill>
 
     return Align(
       alignment: Alignment.bottomCenter,
+      heightFactor: 1.0,
       child: Padding(
         padding: EdgeInsets.only(bottom: inset + QlypStyle.navPillGap),
         child: AnimatedBuilder(
@@ -214,6 +216,10 @@ class _PillChrome extends StatelessWidget {
   }
 }
 
+/// Inactive tab icon sits 6 px lower (spec §2.10); animated with press spring.
+const double _navInactiveIconDy = 6.0;
+const double _navIconSize = 22.0;
+
 class _QlypFloatingNavTab extends StatelessWidget {
   const _QlypFloatingNavTab({
     required this.item,
@@ -241,6 +247,9 @@ class _QlypFloatingNavTab extends StatelessWidget {
           : Brightness.dark,
     );
 
+    final pressDuration = QlypMotionAccessibility.duration(context, kDurPress);
+    final pressCurve = QlypMotionAccessibility.curve(context, kQlypSpring);
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -249,14 +258,28 @@ class _QlypFloatingNavTab extends StatelessWidget {
         children: [
           AnimatedScale(
             scale: isActive ? 1.15 : 1.0,
-            duration: QlypMotionAccessibility.duration(context, kDurPress),
-            curve: QlypMotionAccessibility.curve(context, kQlypSpring),
-            child: Transform.translate(
-              offset: isActive ? Offset.zero : const Offset(0, 6),
-              child: Icon(
-                item.icon,
-                size: 22,
-                color: isActive ? activeColor : inactiveColor,
+            duration: pressDuration,
+            curve: pressCurve,
+            child: AnimatedSlide(
+              offset: Offset(
+                0,
+                isActive ? 0 : _navInactiveIconDy / _navIconSize,
+              ),
+              duration: pressDuration,
+              curve: pressCurve,
+              child: TweenAnimationBuilder<Color?>(
+                duration: pressDuration,
+                curve: pressCurve,
+                tween: ColorTween(
+                  end: isActive ? activeColor : inactiveColor,
+                ),
+                builder: (context, color, child) {
+                  return Icon(
+                    item.icon,
+                    size: _navIconSize,
+                    color: color,
+                  );
+                },
               ),
             ),
           ),

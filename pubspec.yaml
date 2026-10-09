@@ -42,3 +42,16 @@ flutter:
     - assets/sounds/
     - assets/animations/
     - assets/images/vehicles/
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: test/fixtures/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: test/fixtures/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: test/fixtures/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: test/fixtures/fonts/Inter-Bold.ttf
+          weight: 700
+        - asset: test/fixtures/fonts/Inter-ExtraBold.ttf
+          weight: 800
