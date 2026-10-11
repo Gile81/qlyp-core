@@ -29,6 +29,7 @@ export 'models/trip_route_model.dart';
 export 'models/route_trip_search_models.dart';
 export 'models/route_booking_models.dart';
 export 'models/onboarding_slide.dart';
+export 'models/passenger_public_profile.dart';
 export 'models/user.dart';
 export 'models/vehicle.dart';
 export 'services/auth_service.dart';
