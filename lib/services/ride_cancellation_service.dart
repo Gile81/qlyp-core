@@ -67,16 +67,8 @@ class RideCancellationService {
     try {
       final callable = _functions.httpsCallable(name);
       final result = await callable.call<Map<String, dynamic>>(payload);
-      final data = result.data;
-      if (data == null) {
-        throw RideCancellationException(
-          code: 'invalid_response',
-          messageFr: 'Réponse serveur invalide.',
-          messageEn: 'Invalid server response.',
-        );
-      }
       return CancelRideResultView.fromCallableMap(
-        Map<String, dynamic>.from(data),
+        Map<String, dynamic>.from(result.data),
       );
     } on FirebaseFunctionsException catch (e) {
       throw parseFunctionsException(e);
