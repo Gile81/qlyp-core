@@ -68,7 +68,7 @@ class RideCancellationService {
       final callable = _functions.httpsCallable(name);
       final result = await callable.call<Map<String, dynamic>>(payload);
       final data = result.data;
-      if (data is! Map) {
+      if (data == null) {
         throw RideCancellationException(
           code: 'invalid_response',
           messageFr: 'Réponse serveur invalide.',
