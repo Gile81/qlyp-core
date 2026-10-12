@@ -1,0 +1,106 @@
+{
+  "callables": {
+    "previewCancelRide": {
+      "input": {
+        "orderId": "string"
+      },
+      "output": "CancelRideResult",
+      "auth": "passenger or assigned driver"
+    },
+    "cancelRide": {
+      "input": {
+        "orderId": "string",
+        "reason": "string optional"
+      },
+      "output": "CancelRideResult",
+      "auth": "passenger or assigned driver"
+    },
+    "markPassengerNoShow": {
+      "input": {
+        "orderId": "string"
+      },
+      "output": "CancelRideResult",
+      "auth": "assigned driver only"
+    },
+    "internalAdminCancelRide": {
+      "method": "POST",
+      "input": {
+        "orderId": "string",
+        "actor": "admin|passenger|driver",
+        "reason": "string required for admin"
+      },
+      "output": {
+        "ok": true,
+        "result": "CancelRideResult"
+      }
+    }
+  },
+  "fee_base": {
+    "description": "Minimum fare HT: ctq_base_fare or ctq_night_base_fare (zone local time) times tier_rate_multiplier",
+    "keys": [
+      "ctq_base_fare",
+      "ctq_night_base_fare",
+      "tier_rate_multiplier"
+    ],
+    "resolver": "resolveTierMinimumFareHt"
+  },
+  "order_fields": {
+    "cancellation": {
+      "by": "passenger|driver|admin|system",
+      "reason_code": "free_window|after_accept|after_arrival|no_show|scheduled_free|scheduled_mid|scheduled_late|driver|admin|system",
+      "reason_text": "string",
+      "at": "Timestamp",
+      "fee_ht": "number",
+      "fee_taxes": [
+        {
+          "key": "string",
+          "label_fr": "string",
+          "label_en": "string",
+          "rate": "number",
+          "amount": "number"
+        }
+      ],
+      "fee_ttc": "number",
+      "driver_share": "number",
+      "platform_share": "number",
+      "admin_compensation": "number (recorded; payout Sprint 8)",
+      "params_version": "object"
+    },
+    "cancellation_charge_status": "none|pending (S7-C)",
+    "driver_assigned_at": "Server Timestamp when driver assigned (direct, marketplace, shared join, admin)",
+    "driver_cancellations": "Array of {driverId, at, reason_text}",
+    "dispatch_excluded_driver_ids": "string[] server-only",
+    "redispatch_requested_at": "Timestamp server-only"
+  },
+  "payment_s7_c": "No wallet movement on cancel until Sprint 8",
+  "driver_cancel_redispatch": {
+    "description": "Driver voluntary cancel: Ride Placed, dispatch_excluded_driver_ids, driver_cancellations[], cancellations_count++, redispatch_requested_at consumed by onOrderRedispatchRequested (180s) calling dispatchDirectOrderAfterCreate. No passenger fee.",
+    "shared_trip": "Each active booking unassigned, shared_ride_status solo, trip closed."
+  },
+  "error_codes": {
+    "cannot_cancel_now": {
+      "httpsError": "failed-precondition",
+      "callables": ["previewCancelRide", "cancelRide"]
+    },
+    "no_show_too_early": {
+      "httpsError": "failed-precondition",
+      "callables": ["markPassengerNoShow"]
+    },
+    "not_assigned_driver": {
+      "httpsError": "permission-denied",
+      "callables": ["markPassengerNoShow"]
+    },
+    "forbidden": {
+      "httpsError": "permission-denied",
+      "callables": ["previewCancelRide", "cancelRide", "markPassengerNoShow"]
+    },
+    "order_not_found": {
+      "httpsError": "not-found",
+      "callables": ["previewCancelRide", "cancelRide", "markPassengerNoShow"]
+    },
+    "reason_required": {
+      "httpsError": "invalid-argument",
+      "callables": ["cancelRide"]
+    }
+  }
+}
