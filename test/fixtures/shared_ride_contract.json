@@ -1,0 +1,104 @@
+{
+  "version": 2,
+  "orderFields": {
+    "clientWrite": {
+      "shared_ride_opt_in": { "type": "boolean", "note": "Passenger choice at order create; quote may send true to read availability only." },
+      "shared_ride_seats": { "type": "number", "optional": true }
+    },
+    "serverWrite": {
+      "sharedTripId": { "type": "string" },
+      "shared_ride_status": {
+        "type": "string",
+        "enum": ["searching", "matched", "solo", "closed"]
+      },
+      "shared_ride_dispatch_phase": { "type": "string", "optional": true },
+      "shared_ride_seats": { "type": "number", "optional": true },
+      "shared_ride_boarded_at": { "type": "timestamp", "optional": true },
+      "shared_ride_dropped_at": { "type": "timestamp", "optional": true },
+      "shared_ride_was_shared": { "type": "boolean", "optional": true },
+      "shared_ride_fallback": { "type": "string", "enum": ["marketplace"], "optional": true },
+      "shared_ride_final_ride_total": { "type": "number", "optional": true, "note": "Ride-only TTC after trip (functions); not admin quote_payable_total." },
+      "quote_solo_total": { "type": "number", "optional": true },
+      "quote_shared_total": { "type": "number", "optional": true },
+      "quote_solo_total_before_coupon": { "type": "number", "optional": true },
+      "quote_shared_total_before_coupon": { "type": "number", "optional": true },
+      "shared_ride_view": { "type": "object", "ref": "sharedRideView" }
+    },
+    "adminWrite": {
+      "quote_payable_total": { "type": "number", "optional": true, "note": "Final paid total including wait and toll (admin OrderCompletionService only)." }
+    },
+    "addressFieldsForStops": {
+      "sourceLocationName": { "type": "string", "note": "Pickup label on order; copied to shared_trips.stops[].address for pickup." },
+      "destinationLocationName": { "type": "string", "note": "Dropoff label on order; copied to shared_trips.stops[].address for dropoff." }
+    }
+  },
+  "priceQuoteRideFields": {
+    "shared_ride_available": { "type": "boolean" },
+    "shared_ride_discount_pct": { "type": "number" },
+    "quote_solo_total": { "type": "number", "optional": true, "when": "shared_ride_available" },
+    "quote_shared_total": { "type": "number", "optional": true, "when": "shared_ride_available" }
+  },
+  "sharedRideView": {
+    "otherPassengerFirstName": { "type": "string", "optional": true },
+    "otherPassengerOnBoard": { "type": "boolean", "optional": true },
+    "stopsBeforeMyPickup": { "type": "number", "optional": true },
+    "stopsBeforeMyDropoff": { "type": "number", "optional": true },
+    "isShared": { "type": "boolean", "optional": true },
+    "priceIfShared": { "type": "number", "optional": true },
+    "priceIfSolo": { "type": "number", "optional": true },
+    "shared_ride_fallback": { "type": "string", "enum": ["marketplace"], "optional": true }
+  },
+  "sharedTripDocument": {
+    "collection": "shared_trips",
+    "fields": {
+      "driverId": { "type": "string" },
+      "serviceId": { "type": "string" },
+      "zoneId": { "type": "string" },
+      "seatCapacity": { "type": "number" },
+      "seatsUsed": { "type": "number" },
+      "joinOpen": { "type": "boolean" },
+      "status": { "type": "string", "enum": ["open", "full", "closed", "completed"] },
+      "lockVersion": { "type": "number" },
+      "nextStopIndex": { "type": "number", "optional": true },
+      "bookings": { "type": "array", "ref": "sharedTripBooking" },
+      "stops": { "type": "array", "ref": "sharedTripStop" }
+    }
+  },
+  "sharedTripStop": {
+    "orderId": { "type": "string" },
+    "kind": { "type": "string", "enum": ["pickup", "dropoff"] },
+    "lat": { "type": "number" },
+    "lng": { "type": "number" },
+    "address": { "type": "string" },
+    "status": { "type": "string", "enum": ["pending", "done", "canceled"] }
+  },
+  "sharedTripBooking": {
+    "orderId": { "type": "string" },
+    "userId": { "type": "string" },
+    "seats": { "type": "number" },
+    "soloDurationS": { "type": "number" },
+    "plannedDurationS": { "type": "number" },
+    "status": { "type": "string", "enum": ["pending", "boarded", "dropped", "canceled"] },
+    "boardedAt": { "type": "timestamp", "optional": true },
+    "droppedAt": { "type": "timestamp", "optional": true }
+  },
+  "notifications": {
+    "passenger": {
+      "type": "shared_ride_co_passenger",
+      "channelKey": "rideUpdates",
+      "channelId": "qlyp_ride_updates",
+      "data": ["type", "orderId", "sharedTripId", "channel"]
+    },
+    "passengerMarketplaceFallback": {
+      "type": "shared_ride_marketplace_fallback",
+      "channelKey": "rideUpdates",
+      "channelId": "qlyp_ride_updates",
+      "data": ["type", "orderId", "channel"]
+    },
+    "driver": {
+      "type": "shared_ride_passenger_joined",
+      "channelId": "qlyp_dispatch_channel",
+      "data": ["type", "orderId", "sharedTripId", "channel"]
+    }
+  }
+}
