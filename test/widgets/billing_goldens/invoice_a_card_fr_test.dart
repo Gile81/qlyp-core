@@ -26,6 +26,7 @@ void main() {
   });
 
     testWidgets('golden', (tester) async {
+      configureBillingGoldenSurface(tester);
       final invoice = BillingInvoiceView.fromMap(
         await loadBillingDoc('a_card_invoice.json'),
       );

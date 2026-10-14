@@ -10,6 +10,7 @@ import 'package:qlyp_core/models/billing_statement_view.dart';
 import 'package:qlyp_core/widgets/qlyp_billing_lines.dart';
 import 'package:qlyp_core/widgets/qlyp_payout_label.dart';
 
+import 'billing_goldens/billing_golden_harness.dart';
 import 'design_test_helpers.dart';
 import 'pill_golden_fonts.dart';
 
@@ -34,6 +35,7 @@ void main() {
   });
 
   testWidgets('QlypPayoutLabel maquette E EN golden', (tester) async {
+    configureBillingGoldenSurface(tester);
     await tester.pumpWidget(
       wrapDesignTest(
         locale: const Locale('en', 'CA'),
@@ -52,6 +54,7 @@ void main() {
   });
 
   testWidgets('QlypPayoutLabel FR golden', (tester) async {
+    configureBillingGoldenSurface(tester);
     await tester.pumpWidget(
       wrapDesignTest(
         child: const QlypPayoutLabel(
@@ -70,6 +73,7 @@ void main() {
   });
 
   testWidgets('QlypPayoutLabel Montant à confirmer', (tester) async {
+    configureBillingGoldenSurface(tester);
     await tester.pumpWidget(
       wrapDesignTest(
         child: const QlypPayoutLabel(
