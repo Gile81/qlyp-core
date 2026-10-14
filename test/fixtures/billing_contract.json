@@ -28,7 +28,60 @@
         "regenerate_pdf",
         "freeze_commission_rate"
       ]
+    },
+    "setRideTip": {
+      "input": {
+        "orderId": "string",
+        "amount": "number"
+      },
+      "output": {
+        "ok": "boolean",
+        "tip_amount": "number"
+      },
+      "auth": "passenger (order owner)",
+      "error_codes": [
+        "tip_not_allowed_cash",
+        "tip_order_not_paid",
+        "tip_order_not_completed",
+        "tip_window_expired",
+        "tip_already_set",
+        "tip_invalid_amount",
+        "order_not_found",
+        "permission_denied"
+      ]
+    },
+    "setTipPromptState": {
+      "input": {
+        "orderId": "string",
+        "state": "later|reminded|declined"
+      },
+      "output": {
+        "ok": "boolean",
+        "tip_prompt_state": "string"
+      },
+      "auth": "passenger (order owner)",
+      "error_codes": [
+        "tip_prompt_invalid_transition",
+        "tip_not_allowed_cash",
+        "tip_order_not_paid",
+        "tip_order_not_completed",
+        "tip_window_expired",
+        "tip_already_set",
+        "order_not_found",
+        "permission_denied"
+      ]
     }
+  },
+  "client_tip_reminder_query": {
+    "collection": "orders",
+    "filters": [
+      "userId == currentPassengerUid",
+      "tip_prompt_state in ['pending', 'later']",
+      "tip_deadline_at > nowIso"
+    ],
+    "orderBy": "tip_deadline_at desc",
+    "limit": 1,
+    "firestore_index": "orders: userId ASC, tip_prompt_state ASC, tip_deadline_at DESC"
   },
   "order_fields": {
     "financials": "RideFinancialsResult + computed_at + version",
@@ -46,7 +99,39 @@
     "driver_payout_estimate": "number",
     "driver_payout_toll": "number",
     "driver_course_taxes_to_remit": "number",
-    "driver_net_estimate": "number"
+    "driver_net_estimate": "number",
+    "tip_amount": "number optional",
+    "tip_status": "pending optional",
+    "tip_set_at": "timestamp optional",
+    "tip_options": "[{ pct: number, amount: number }] optional",
+    "tip_deadline_at": "string ISO optional",
+    "tip_prompt_state": "pending|later|reminded|declined|completed optional",
+    "financials_history": "RideFinancialsResult[] max 5 optional"
+  },
+  "zone_custom_params": {
+    "tip_preset_pcts": "[10, 15, 20] default",
+    "tip_max_amount": "100 default",
+    "tip_window_hours": "72 default"
+  },
+  "driver_ledger": {
+    "tip_payout_due": {
+      "doc_id": "{driverId}_{orderId}_tip",
+      "type": "tip_payout_due",
+      "amount": "tip amount number",
+      "wallet_credited": "boolean false until Sprint 8 payout",
+      "status": "pending"
+    },
+    "card_payout_due": {
+      "doc_id": "{driverId}_{orderId}_card_payout",
+      "type": "card_payout_due",
+      "wallet_credited": "boolean"
+    }
+  },
+  "driver_notifications": {
+    "driver_tip_received": {
+      "type": "driver_tip_received",
+      "channel": "qlyp_ride_updates"
+    }
   },
   "marketplace_bid_fields": {
     "driver_payout_estimate": "number",
@@ -84,9 +169,11 @@
   "invoices": {
     "collection": "invoices",
     "document": {
-      "version": 1,
+      "version": "1|2",
       "type": "ride|cancellation",
       "document_number": "string",
+      "previous_version_id": "string optional",
+      "replaces_previous_issued_at": "string ISO optional",
       "order_id": "string",
       "user_id": "string",
       "driver_id": "string",
@@ -115,9 +202,11 @@
   "driver_statements": {
     "collection": "driver_statements",
     "document": {
-      "version": 1,
+      "version": "1|2",
       "type": "ride|cancellation",
       "document_number": "string",
+      "previous_version_id": "string optional",
+      "replaces_previous_issued_at": "string ISO optional",
       "order_id": "string",
       "user_id": "string",
       "driver_id": "string",
@@ -164,6 +253,13 @@
     "max_attempts_exceeded": "order financials write attempts exhausted",
     "blocked_quote_refresh": "financials blocked until quote refresh completes",
     "quote_refresh_pending": "financials deferred while quote_refresh_status pending",
-    "quote_refresh_error": "financials blocked after quote refresh error"
+    "quote_refresh_error": "financials blocked after quote refresh error",
+    "tip_not_allowed_cash": "setRideTip cash-paid ride",
+    "tip_order_not_completed": "setRideTip ride not completed or financials not ready",
+    "tip_order_not_paid": "setRideTip or setTipPromptState before order paymentStatus paid",
+    "tip_window_expired": "setRideTip after tip_deadline_at",
+    "tip_already_set": "setRideTip duplicate",
+    "tip_invalid_amount": "setRideTip amount invalid or over max",
+    "tip_prompt_invalid_transition": "setTipPromptState invalid tip_prompt_state transition"
   }
 }

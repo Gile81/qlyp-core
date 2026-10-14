@@ -40,6 +40,8 @@ class BillingDocumentPaymentView {
 
 class BillingInvoiceView {
   const BillingInvoiceView({
+    this.version,
+    this.previousVersionId,
     this.documentNumber,
     this.type,
     this.language,
@@ -56,6 +58,8 @@ class BillingInvoiceView {
     this.pdfStatus,
   });
 
+  final int? version;
+  final String? previousVersionId;
   final String? documentNumber;
   final String? type;
   final String? language;
@@ -100,7 +104,18 @@ class BillingInvoiceView {
     final headerRaw = raw[BillingContract.invoiceFieldHeader];
     final paymentRaw = raw[BillingContract.invoiceFieldPayment];
     final legalRaw = raw[BillingContract.invoiceFieldLegal];
+    final versionRaw = raw[BillingContract.invoiceFieldVersion];
+    int? version;
+    if (versionRaw is num) {
+      version = versionRaw.round();
+    } else if (versionRaw != null) {
+      version = int.tryParse(versionRaw.toString().trim());
+    }
     return BillingInvoiceView(
+      version: version,
+      previousVersionId: billingOptionalString(
+        raw[BillingContract.invoiceFieldPreviousVersionId],
+      ),
       documentNumber:
           billingOptionalString(raw[BillingContract.invoiceFieldDocumentNumber]),
       type: billingOptionalString(raw[BillingContract.invoiceFieldType]),

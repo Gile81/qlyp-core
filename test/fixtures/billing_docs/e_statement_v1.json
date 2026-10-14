@@ -1,0 +1,308 @@
+{
+  "version": 1,
+  "type": "ride",
+  "document_number": "QLP-2026-000123",
+  "order_id": "ord_e",
+  "user_id": "pass_1",
+  "driver_id": "drv_1",
+  "zone_id": "zone_laval",
+  "pillar": "courses",
+  "language": "fr",
+  "issued_at": "2026-01-13T15:30:00.000Z",
+  "header": {
+    "passenger_name": "",
+    "driver_display_name": "",
+    "driver_rating": null,
+    "route_from": "",
+    "route_to": "Montréal, QC",
+    "distance_km": null,
+    "duration_minutes": null,
+    "pillar_key": "courses",
+    "pillar_label_fr": "Courses",
+    "pillar_label_en": "Rides",
+    "tier_key": "standard",
+    "tier_label_fr": "Standard",
+    "tier_label_en": "Standard",
+    "price_type_key": "direct_quote",
+    "price_type_label_fr": "Course directe (prix du devis)",
+    "price_type_label_en": "Direct ride (quoted price)",
+    "issued_local_date": "2026-01-13",
+    "issued_local_time": "10 h 30",
+    "time_zone": "America/Toronto"
+  },
+  "commission": {
+    "rate": 0.18,
+    "base_ht": 39.68,
+    "commission_ht": 7.14,
+    "taxes": [
+      {
+        "id": "gst",
+        "rate": 0.05,
+        "amount": 0.36,
+        "label_fr": "TPS",
+        "label_en": "GST"
+      },
+      {
+        "id": "qst",
+        "rate": 0.09975,
+        "amount": 0.71,
+        "label_fr": "TVQ",
+        "label_en": "QST"
+      }
+    ],
+    "total_ttc": 8.21
+  },
+  "statement_lines": [
+    {
+      "key": "your_ride_subtotal",
+      "label_fr": "Votre course (HT)",
+      "label_en": "Your ride (excl. tax)",
+      "amount": 39.68,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_platform",
+      "label_fr": "Frais plateforme",
+      "label_en": "Platform fee",
+      "amount": 2,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_airport",
+      "label_fr": "Frais d'aéroport YUL",
+      "label_en": "YUL airport fee",
+      "amount": 4.9,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_ctq_modernization_fee",
+      "label_fr": "Redevance CTQ",
+      "label_en": "CTQ fee",
+      "amount": 0.9,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_tax_gst",
+      "label_fr": "TPS",
+      "label_en": "GST",
+      "amount": 2.37,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_tax_qst",
+      "label_fr": "TVQ",
+      "label_en": "QST",
+      "amount": 4.74,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_toll",
+      "label_fr": "Péage",
+      "label_en": "Toll",
+      "amount": 12.21,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_paid_total",
+      "label_fr": "Total payé par la passagère",
+      "label_en": "Total paid by passenger",
+      "amount": 66.8,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "commission_ht",
+      "label_fr": "Commission (18 % de 39,68 $)",
+      "label_en": "Commission (18% of $39.68)",
+      "amount": -7.14,
+      "section": "retained_by_qlyp"
+    },
+    {
+      "key": "commission_taxes",
+      "label_fr": "TPS / TVQ sur la commission",
+      "label_en": "GST / QST on commission",
+      "amount": -1.07,
+      "section": "retained_by_qlyp"
+    },
+    {
+      "key": "platform_total",
+      "label_fr": "Frais plateforme + taxes (non à vous)",
+      "label_en": "Platform fee + taxes (not yours)",
+      "amount": -2.3,
+      "section": "retained_by_qlyp"
+    },
+    {
+      "key": "airport_total",
+      "label_fr": "Frais d'aéroport YUL – ADM + taxes (non à vous)",
+      "label_en": "YUL airport fee – ADM + taxes (not yours)",
+      "amount": -5.64,
+      "section": "retained_by_qlyp"
+    },
+    {
+      "key": "ctq_modernization_fee_total",
+      "label_fr": "Redevance CTQ – CTQ Québec + taxes (non à vous)",
+      "label_en": "CTQ fee – CTQ Québec + taxes (not yours)",
+      "amount": -1.04,
+      "section": "retained_by_qlyp"
+    },
+    {
+      "key": "retained_total",
+      "label_fr": "Total retenu par QLYP",
+      "label_en": "Total retained by QLYP",
+      "amount": -17.19,
+      "section": "retained_by_qlyp"
+    },
+    {
+      "key": "paid_to_driver_total",
+      "label_fr": "Versé à vous",
+      "label_en": "Paid to you",
+      "amount": 49.61,
+      "section": "paid_to_driver"
+    },
+    {
+      "key": "paid_toll",
+      "label_fr": "Dont péage et taxes (100 %)",
+      "label_en": "Including toll and taxes (100%)",
+      "amount": 12.21,
+      "section": "paid_to_driver"
+    },
+    {
+      "key": "taxes_to_remit_total",
+      "label_fr": "dont TPS / TVQ de votre course à remettre par vous (1,97 + 3,96) : 5,93 $",
+      "label_en": "including GST/QST on your ride to remit (1.97 + 3.96): $5.93",
+      "amount": 5.93,
+      "section": "paid_to_driver",
+      "text_only": true
+    },
+    {
+      "key": "driver_revenue_total",
+      "label_fr": "Revenu de la course",
+      "label_en": "Ride revenue",
+      "amount": 31.47,
+      "section": "driver_revenue"
+    },
+    {
+      "key": "driver_revenue_formula",
+      "label_fr": "(39,68 – 7,14 – 1,07)",
+      "label_en": "($39.68 – $7.14 – $1.07)",
+      "amount": 0,
+      "section": "driver_revenue",
+      "text_only": true
+    },
+    {
+      "key": "payout_sprint8",
+      "label_fr": "Mode, fréquence et date : au Sprint 8",
+      "label_en": "Method, frequency and date: in Sprint 8",
+      "amount": 0,
+      "section": "payout_info",
+      "text_only": true
+    },
+    {
+      "key": "decl_self_employed",
+      "label_fr": "Statut : travailleur autonome",
+      "label_en": "Status: self-employed contractor",
+      "amount": 0,
+      "section": "declarations",
+      "text_only": true
+    },
+    {
+      "key": "decl_taxes_collected",
+      "label_fr": "Taxes perçues pour vous (course) : 5,93 $",
+      "label_en": "Taxes collected for you (ride): $5.93",
+      "amount": 0,
+      "section": "declarations",
+      "text_only": true
+    },
+    {
+      "key": "decl_toll_reimbursement",
+      "label_fr": "Péage : remboursement de dépense : 12,21 $",
+      "label_en": "Toll: expense reimbursement: $12.21",
+      "amount": 0,
+      "section": "declarations",
+      "text_only": true
+    }
+  ],
+  "your_ride_lines": [
+    {
+      "key": "strategy_base",
+      "label_fr": "Prise en charge (tarif de nuit)",
+      "label_en": "Pickup (night rate)",
+      "amount_ht": 4.7,
+      "recipient": "driver",
+      "taxable": true
+    },
+    {
+      "key": "strategy_variable",
+      "label_fr": "Distance (22,4 km)",
+      "label_en": "Distance (22.4 km)",
+      "amount_ht": 32.7,
+      "recipient": "driver",
+      "taxable": true
+    },
+    {
+      "key": "ctq_wait",
+      "label_fr": "Attente facturée (3 min)",
+      "label_en": "Billable wait (3 min)",
+      "amount_ht": 2.28,
+      "recipient": "driver",
+      "taxable": true
+    }
+  ],
+  "your_ride_subtotal_ht": 39.68,
+  "passenger_paid_total_ttc": 66.8,
+  "retained_total": -17.19,
+  "toll": {
+    "items": [
+      {
+        "label_fr": "Peage",
+        "label_en": "Toll",
+        "amount_ht": 12.21
+      }
+    ],
+    "subtotal_ht": 12.21,
+    "taxes": [],
+    "total_ttc": 12.21
+  },
+  "tip": 0,
+  "paid_to_driver": 49.61,
+  "driver_taxes_to_remit": [
+    {
+      "id": "gst",
+      "rate": 0.05,
+      "amount": 1.97,
+      "label_fr": "TPS",
+      "label_en": "GST"
+    },
+    {
+      "id": "qst",
+      "rate": 0.09975,
+      "amount": 3.96,
+      "label_fr": "TVQ",
+      "label_en": "QST"
+    }
+  ],
+  "driver_taxes_to_remit_total": 5.93,
+  "driver_revenue": 31.47,
+  "qlyp_promo_subsidy": 0,
+  "cash_collected_by_driver": false,
+  "cash_due_to_qlyp": 0,
+  "payment": {
+    "method": "card",
+    "status": "pending",
+    "label_fr": "Carte · en attente (prélèvement au Sprint 8)",
+    "label_en": "Card · pending (charge in Sprint 8)"
+  },
+  "legal": {
+    "platform": {
+      "legal_name": "Les Plateformes Qlyp Inc.",
+      "address_line1": "",
+      "city": "Montréal",
+      "province": "QC",
+      "postal_code": "",
+      "gst_number": "123456789RT0001",
+      "qst_number": "1234567890TQ0001"
+    }
+  },
+  "retain_until": "2033-01-13T15:30:00.000Z",
+  "retention_years": 7,
+  "pdf_path": null
+}

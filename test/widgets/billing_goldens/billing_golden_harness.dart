@@ -35,7 +35,11 @@ Widget invoiceGoldenBody(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Text(
-        billingInvoiceDocumentTitle(languageCode, invoice.type ?? 'ride'),
+        billingInvoiceDocumentTitle(
+          languageCode,
+          invoice.type ?? 'ride',
+          version: invoice.version ?? 1,
+        ),
         style: QlypTypography.h3(),
       ),
       const SizedBox(height: 8),

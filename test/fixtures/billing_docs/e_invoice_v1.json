@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "type": "ride",
+  "document_number": "QLP-2026-000123",
+  "order_id": "ord_e",
+  "user_id": "pass_1",
+  "driver_id": "drv_1",
+  "zone_id": "zone_laval",
+  "pillar": "courses",
+  "language": "fr",
+  "issued_at": "2026-01-13T15:30:00.000Z",
+  "header": {
+    "passenger_name": "",
+    "driver_display_name": "",
+    "driver_rating": null,
+    "route_from": "",
+    "route_to": "Montréal, QC",
+    "distance_km": null,
+    "duration_minutes": null,
+    "pillar_key": "courses",
+    "pillar_label_fr": "Courses",
+    "pillar_label_en": "Rides",
+    "tier_key": "standard",
+    "tier_label_fr": "Standard",
+    "tier_label_en": "Standard",
+    "price_type_key": "direct_quote",
+    "price_type_label_fr": "Course directe (prix du devis)",
+    "price_type_label_en": "Direct ride (quoted price)",
+    "issued_local_date": "2026-01-13",
+    "issued_local_time": "10 h 30",
+    "time_zone": "America/Toronto"
+  },
+  "display_lines": [
+    {
+      "key": "strategy_base",
+      "label_fr": "Prise en charge (tarif de nuit)",
+      "label_en": "Pickup (night rate)",
+      "amount": 4.7,
+      "section": "ride_detail"
+    },
+    {
+      "key": "strategy_variable",
+      "label_fr": "Distance (22,4 km)",
+      "label_en": "Distance (22.4 km)",
+      "amount": 32.7,
+      "section": "ride_detail"
+    },
+    {
+      "key": "ctq_wait",
+      "label_fr": "Attente facturée (3 min)",
+      "label_en": "Billable wait (3 min)",
+      "amount": 2.28,
+      "section": "ride_detail"
+    },
+    {
+      "key": "platform_fee_per_trip",
+      "label_fr": "Frais plateforme",
+      "label_en": "Platform fee",
+      "amount": 2,
+      "section": "ride_detail"
+    },
+    {
+      "key": "airport_surcharge",
+      "label_fr": "Frais d'aéroport YUL",
+      "label_en": "YUL airport fee",
+      "amount": 4.9,
+      "section": "ride_detail"
+    },
+    {
+      "key": "ctq_modernization_fee",
+      "label_fr": "Redevance CTQ",
+      "label_en": "CTQ fee",
+      "amount": 0.9,
+      "section": "ride_detail"
+    },
+    {
+      "key": "taxable_subtotal",
+      "label_fr": "Sous-total taxable",
+      "label_en": "Taxable subtotal",
+      "amount": 47.48,
+      "section": "taxable_subtotal"
+    },
+    {
+      "key": "tax_gst",
+      "label_fr": "TPS (5 %)",
+      "label_en": "GST (5 %)",
+      "amount": 2.37,
+      "section": "tax"
+    },
+    {
+      "key": "tax_qst",
+      "label_fr": "TVQ (9,975 %)",
+      "label_en": "QST (9.975 %)",
+      "amount": 4.74,
+      "section": "tax"
+    },
+    {
+      "key": "ride_total",
+      "label_fr": "Total de la course",
+      "label_en": "Ride total",
+      "amount": 54.59,
+      "section": "ride_total"
+    },
+    {
+      "key": "toll_item",
+      "label_fr": "Peage",
+      "label_en": "Toll",
+      "amount": 12.21,
+      "section": "toll"
+    },
+    {
+      "key": "toll_total",
+      "label_fr": "Total péage",
+      "label_en": "Toll total",
+      "amount": 12.21,
+      "section": "toll"
+    },
+    {
+      "key": "passenger_total",
+      "label_fr": "Total payé",
+      "label_en": "Total paid",
+      "amount": 66.8,
+      "section": "grand_total"
+    }
+  ],
+  "ride_subtotal_taxable_ht": 47.48,
+  "ride_taxes": [
+    {
+      "id": "gst",
+      "rate": 0.05,
+      "amount": 2.37,
+      "label_fr": "TPS",
+      "label_en": "GST"
+    },
+    {
+      "id": "qst",
+      "rate": 0.09975,
+      "amount": 4.74,
+      "label_fr": "TVQ",
+      "label_en": "QST"
+    }
+  ],
+  "ride_total_ttc": 54.59,
+  "toll": {
+    "items": [
+      {
+        "label_fr": "Peage",
+        "label_en": "Toll",
+        "amount_ht": 12.21
+      }
+    ],
+    "subtotal_ht": 12.21,
+    "taxes": [],
+    "total_ttc": 12.21
+  },
+  "tip": 0,
+  "passenger_total_ttc": 66.8,
+  "payment": {
+    "method": "card",
+    "status": "pending",
+    "label_fr": "Carte · en attente (prélèvement au Sprint 8)",
+    "label_en": "Card · pending (charge in Sprint 8)"
+  },
+  "legal": {
+    "platform": {
+      "legal_name": "Les Plateformes Qlyp Inc.",
+      "address_line1": "",
+      "city": "Montréal",
+      "province": "QC",
+      "postal_code": "",
+      "gst_number": "123456789RT0001",
+      "qst_number": "1234567890TQ0001"
+    },
+    "driver": {
+      "gst_number": "123456789RT0001",
+      "qst_number": "1234567890TQ0001"
+    }
+  },
+  "retain_until": "2033-01-13T15:30:00.000Z",
+  "retention_years": 7,
+  "pdf_path": null
+}

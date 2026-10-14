@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "type": "ride",
   "document_number": "QLP-2026-000124",
   "order_id": "ord_e",
@@ -117,8 +117,8 @@
     },
     {
       "key": "tip",
-      "label_fr": "Pourboire",
-      "label_en": "Tip",
+      "label_fr": "Pourboire (volontaire)",
+      "label_en": "Tip (voluntary)",
       "amount": 4,
       "section": "tip"
     },
@@ -185,5 +185,6 @@
   },
   "retain_until": "2033-01-13T15:30:00.000Z",
   "retention_years": 7,
-  "pdf_path": null
+  "pdf_path": null,
+  "previous_version_id": "e_v1_invoice_doc"
 }

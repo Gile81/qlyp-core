@@ -1,12 +1,14 @@
 /// Firestore / callable wire names for billing (S7-D contract).
 ///
 /// Mirror of `functions/src/contracts/billing_contract.json`.
-/// SHA-256: e5b4d185e3c880d1d183152c20050a5c3f17538e1d4722dcec02f6acd5f5547a
+/// SHA-256: b33ee67527d497d74f47b6239a56b63abb3d662b9fbe65ee39113adc97dab8d3
 abstract final class BillingContract {
   static const String contractSha256 =
-      'E5B4D185E3C880D1D183152C20050A5C3F17538E1D4722DCEC02F6ACD5F5547A';
+      'B33EE67527D497D74F47B6239A56B63ABB3D662B9FBE65EE39113ADC97DAB8D3';
 
   static const String callableGetBillingDocumentUrl = 'getBillingDocumentUrl';
+  static const String callableSetRideTip = 'setRideTip';
+  static const String callableSetTipPromptState = 'setTipPromptState';
 
   static const String inputDocumentType = 'documentType';
   static const String inputDocumentId = 'documentId';
@@ -38,6 +40,13 @@ abstract final class BillingContract {
   static const String fieldDriverCourseTaxesToRemit =
       'driver_course_taxes_to_remit';
   static const String fieldDriverNetEstimate = 'driver_net_estimate';
+  static const String fieldTipAmount = 'tip_amount';
+  static const String fieldTipStatus = 'tip_status';
+  static const String fieldTipSetAt = 'tip_set_at';
+  static const String fieldTipOptions = 'tip_options';
+  static const String fieldTipDeadlineAt = 'tip_deadline_at';
+  static const String fieldTipPromptState = 'tip_prompt_state';
+  static const String fieldFinancialsHistory = 'financials_history';
 
   static const List<String> orderFieldKeys = [
     fieldFinancials,
@@ -56,7 +65,50 @@ abstract final class BillingContract {
     fieldDriverPayoutToll,
     fieldDriverCourseTaxesToRemit,
     fieldDriverNetEstimate,
+    fieldTipAmount,
+    fieldTipStatus,
+    fieldTipSetAt,
+    fieldTipOptions,
+    fieldTipDeadlineAt,
+    fieldTipPromptState,
+    fieldFinancialsHistory,
   ];
+
+  static const String inputOrderId = 'orderId';
+  static const String inputTipAmount = 'amount';
+  static const String inputTipPromptState = 'state';
+
+  static const String outputOk = 'ok';
+  static const String outputTipAmount = 'tip_amount';
+  static const String outputTipPromptState = 'tip_prompt_state';
+
+  static const String tipPromptStatePending = 'pending';
+  static const String tipPromptStateLater = 'later';
+  static const String tipPromptStateReminded = 'reminded';
+  static const String tipPromptStateDeclined = 'declined';
+  static const String tipPromptStateCompleted = 'completed';
+
+  static const List<String> tipPromptStates = [
+    tipPromptStatePending,
+    tipPromptStateLater,
+    tipPromptStateReminded,
+    tipPromptStateDeclined,
+    tipPromptStateCompleted,
+  ];
+
+  static const List<String> clientTipPromptStates = [
+    tipPromptStateLater,
+    tipPromptStateReminded,
+    tipPromptStateDeclined,
+  ];
+
+  static const List<String> tipReminderQueryPromptStates = [
+    tipPromptStatePending,
+    tipPromptStateLater,
+  ];
+
+  static const String tipOptionPct = 'pct';
+  static const String tipOptionAmount = 'amount';
 
   static const List<String> marketplaceBidPayoutFieldKeys = [
     fieldDriverPayoutEstimate,
@@ -121,6 +173,9 @@ abstract final class BillingContract {
   static const String invoiceFieldVersion = 'version';
   static const String invoiceFieldType = 'type';
   static const String invoiceFieldDocumentNumber = 'document_number';
+  static const String invoiceFieldPreviousVersionId = 'previous_version_id';
+  static const String invoiceFieldReplacesPreviousIssuedAt =
+      'replaces_previous_issued_at';
   static const String invoiceFieldOrderId = 'order_id';
   static const String invoiceFieldUserId = 'user_id';
   static const String invoiceFieldDriverId = 'driver_id';
@@ -167,6 +222,8 @@ abstract final class BillingContract {
     invoiceFieldPassengerTotalTtc,
     invoiceFieldPayment,
     invoiceFieldLegal,
+    invoiceFieldPreviousVersionId,
+    invoiceFieldReplacesPreviousIssuedAt,
     invoiceFieldRetainUntil,
     invoiceFieldRetentionYears,
     invoiceFieldPdfPath,
@@ -230,6 +287,8 @@ abstract final class BillingContract {
     statementFieldCashDueLabelEn,
     invoiceFieldPayment,
     invoiceFieldLegal,
+    invoiceFieldPreviousVersionId,
+    invoiceFieldReplacesPreviousIssuedAt,
     invoiceFieldRetainUntil,
     invoiceFieldRetentionYears,
     invoiceFieldPdfPath,
@@ -258,6 +317,15 @@ abstract final class BillingContract {
   static const String errorBlockedQuoteRefresh = 'blocked_quote_refresh';
   static const String errorQuoteRefreshPending = 'quote_refresh_pending';
   static const String errorQuoteRefreshError = 'quote_refresh_error';
+  static const String errorTipNotAllowedCash = 'tip_not_allowed_cash';
+  static const String errorTipOrderNotCompleted = 'tip_order_not_completed';
+  static const String errorTipOrderNotPaid = 'tip_order_not_paid';
+  static const String errorTipWindowExpired = 'tip_window_expired';
+  static const String errorTipAlreadySet = 'tip_already_set';
+  static const String errorTipInvalidAmount = 'tip_invalid_amount';
+  static const String errorTipPromptInvalidTransition =
+      'tip_prompt_invalid_transition';
+  static const String errorOrderNotFound = 'order_not_found';
 
   static const List<String> getBillingDocumentUrlErrorCodes = [
     errorInvalidRequest,
@@ -266,16 +334,45 @@ abstract final class BillingContract {
     errorPdfNotReady,
   ];
 
+  static const List<String> setRideTipErrorCodes = [
+    errorTipNotAllowedCash,
+    errorTipOrderNotPaid,
+    errorTipOrderNotCompleted,
+    errorTipWindowExpired,
+    errorTipAlreadySet,
+    errorTipInvalidAmount,
+    errorOrderNotFound,
+    errorPermissionDenied,
+  ];
+
+  static const List<String> setTipPromptStateErrorCodes = [
+    errorTipPromptInvalidTransition,
+    errorTipNotAllowedCash,
+    errorTipOrderNotPaid,
+    errorTipOrderNotCompleted,
+    errorTipWindowExpired,
+    errorTipAlreadySet,
+    errorOrderNotFound,
+    errorPermissionDenied,
+  ];
+
   static const List<String> billingErrorCodes = [
+    errorBlockedQuoteRefresh,
     errorFirmBidMissingQuoteBreakdown,
     errorInvalidRequest,
-    errorNotFound,
-    errorPermissionDenied,
-    errorPdfNotReady,
     errorMaxAttemptsExceeded,
-    errorBlockedQuoteRefresh,
-    errorQuoteRefreshPending,
+    errorNotFound,
+    errorPdfNotReady,
+    errorPermissionDenied,
     errorQuoteRefreshError,
+    errorQuoteRefreshPending,
+    errorTipAlreadySet,
+    errorTipInvalidAmount,
+    errorTipNotAllowedCash,
+    errorTipOrderNotCompleted,
+    errorTipOrderNotPaid,
+    errorTipPromptInvalidTransition,
+    errorTipWindowExpired,
   ];
 
   static const List<String> internalAdminBillingActions = [

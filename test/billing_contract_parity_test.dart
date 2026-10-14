@@ -88,4 +88,56 @@ void main() {
     final errors = contract['error_codes'] as Map<String, dynamic>;
     expect(keysOf(errors), BillingContract.billingErrorCodes.toList()..sort());
   });
+
+  test('setRideTip callable matches BillingContract', () {
+    final callables = contract['callables'] as Map<String, dynamic>;
+    expect(callables.keys, contains(BillingContract.callableSetRideTip));
+    final tip = callables[BillingContract.callableSetRideTip] as Map;
+    final input = keysOf(tip['input'] as Map<String, dynamic>);
+    expect(input, [
+      BillingContract.inputTipAmount,
+      BillingContract.inputOrderId,
+    ]);
+    final output = keysOf(tip['output'] as Map<String, dynamic>);
+    expect(output, [
+      BillingContract.outputOk,
+      BillingContract.outputTipAmount,
+    ]);
+    final errors = (tip['error_codes'] as List).cast<String>()..sort();
+    expect(errors, BillingContract.setRideTipErrorCodes.toList()..sort());
+  });
+
+  test('setTipPromptState callable matches BillingContract', () {
+    final callables = contract['callables'] as Map<String, dynamic>;
+    expect(callables.keys, contains(BillingContract.callableSetTipPromptState));
+    final tip = callables[BillingContract.callableSetTipPromptState] as Map;
+    final input = keysOf(tip['input'] as Map<String, dynamic>);
+    expect(input, [
+      BillingContract.inputOrderId,
+      BillingContract.inputTipPromptState,
+    ]);
+    final output = keysOf(tip['output'] as Map<String, dynamic>);
+    expect(output, [
+      BillingContract.outputOk,
+      BillingContract.outputTipPromptState,
+    ]);
+    final errors = (tip['error_codes'] as List).cast<String>()..sort();
+    expect(errors, BillingContract.setTipPromptStateErrorCodes.toList()..sort());
+  });
+
+  test('client_tip_reminder_query uses pending|later and deadline filter', () {
+    final query =
+        contract['client_tip_reminder_query'] as Map<String, dynamic>;
+    expect(query['collection'], 'orders');
+    final filters = (query['filters'] as List).cast<String>();
+    expect(
+      filters.any((f) => f.contains(BillingContract.tipPromptStatePending)),
+      isTrue,
+    );
+    expect(
+      filters.any((f) => f.contains(BillingContract.tipPromptStateLater)),
+      isTrue,
+    );
+    expect(query['orderBy'], 'tip_deadline_at desc');
+  });
 }

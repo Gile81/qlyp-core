@@ -35,6 +35,7 @@ void main() {
           child: billingGoldenScroll(invoiceGoldenBody(invoice, 'fr')),
         ),
       );
+      expect(find.text('Facture — version 2'), findsOneWidget);
       await expectLater(
         find.byKey(billingGoldenKey),
         matchesGoldenFile('../goldens/qlyp_billing_invoice_e_fr.png'),

@@ -7,6 +7,8 @@ import 'billing_tax_line_view.dart';
 
 class BillingStatementView {
   const BillingStatementView({
+    this.version,
+    this.previousVersionId,
     this.documentNumber,
     this.type,
     this.language,
@@ -35,6 +37,8 @@ class BillingStatementView {
     this.pdfStatus,
   });
 
+  final int? version;
+  final String? previousVersionId;
   final String? documentNumber;
   final String? type;
   final String? language;
@@ -109,7 +113,18 @@ class BillingStatementView {
         (tollRaw as Map<String, dynamic>)['total_ttc'],
       );
     }
+    final versionRaw = raw[BillingContract.invoiceFieldVersion];
+    int? version;
+    if (versionRaw is num) {
+      version = versionRaw.round();
+    } else if (versionRaw != null) {
+      version = int.tryParse(versionRaw.toString().trim());
+    }
     return BillingStatementView(
+      version: version,
+      previousVersionId: billingOptionalString(
+        raw[BillingContract.invoiceFieldPreviousVersionId],
+      ),
       documentNumber:
           billingOptionalString(raw[BillingContract.invoiceFieldDocumentNumber]),
       type: billingOptionalString(raw[BillingContract.invoiceFieldType]),

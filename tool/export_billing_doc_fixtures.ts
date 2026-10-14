@@ -123,17 +123,45 @@ const eToll = {
   taxes: [],
   total_ttc: MAQUETTE_E_TOLL_TTC,
 };
-const eDocs = rideDocs(
+const eV1 = rideDocs(
   rideFinancials(buildMaquetteEPricing(), {
     paymentType: 'card',
-    tip: MAQUETTE_E_TIP,
+    tip: 0,
     toll: eToll,
   }),
-  'QLP-2026-000124',
+  'QLP-2026-000123',
   'ord_e',
 );
-writeJson('e_invoice.json', eDocs.invoice);
-writeJson('e_statement.json', eDocs.statement);
+writeJson('e_invoice_v1.json', eV1.invoice);
+writeJson('e_statement_v1.json', eV1.statement);
+
+const eV2Fin = rideFinancials(buildMaquetteEPricing(), {
+  paymentType: 'card',
+  tip: MAQUETTE_E_TIP,
+  toll: eToll,
+});
+const eV2 = buildRideBillingDocuments({
+  orderId: 'ord_e',
+  order: {
+    userId: 'pass_1',
+    driverId: 'drv_1',
+    zoneId: 'zone_laval',
+    paymentType: 'card',
+    destinationLocationName: 'Montréal, QC',
+  },
+  zoneDoc: LAVAL_BILLING_ZONE,
+  financials: eV2Fin,
+  settings,
+  driverTax,
+  documentNumber: 'QLP-2026-000124',
+  issuedAt: referenceAt,
+  referenceAt,
+  documentVersion: 2,
+  previousVersionId: 'e_v1_invoice_doc',
+  previousStatementVersionId: 'e_v1_statement_doc',
+});
+writeJson('e_invoice.json', eV2.invoice);
+writeJson('e_statement.json', eV2.statement);
 
 const cancelFin = computeCancellationFinancials({
   fee_ht: 2.05,
@@ -170,5 +198,6 @@ writeJson('d_invoice.json', dDocs.invoice);
 writeJson('d_statement.json', dDocs.statement);
 
 console.log('A card', aCard.invoice.passenger_total_ttc, aCard.statement.paid_to_driver);
-console.log('E', eDocs.invoice.passenger_total_ttc, eDocs.statement.paid_to_driver);
+console.log('E v1', eV1.invoice.passenger_total_ttc, eV1.statement.paid_to_driver);
+console.log('E v2', eV2.invoice.passenger_total_ttc, eV2.statement.paid_to_driver);
 console.log('D', dDocs.invoice.passenger_total_ttc, dDocs.statement.paid_to_driver);

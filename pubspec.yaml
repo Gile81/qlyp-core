@@ -45,6 +45,7 @@ flutter:
     - assets/animations/
     - assets/images/vehicles/
     - test/fixtures/billing_docs/
+    - test/fixtures/tip_options_maquette_e.json
   fonts:
     - family: Inter
       fonts:
