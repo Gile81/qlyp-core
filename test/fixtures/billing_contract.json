@@ -1,0 +1,169 @@
+{
+  "callables": {
+    "getBillingDocumentUrl": {
+      "input": {
+        "documentType": "invoice|statement",
+        "documentId": "string"
+      },
+      "output": {
+        "url": "string",
+        "expiresAt": "string ISO"
+      },
+      "auth": "passenger (invoice) or driver (statement)",
+      "error_codes": [
+        "invalid_request",
+        "not_found",
+        "permission_denied",
+        "pdf_not_ready"
+      ]
+    },
+    "internalAdminBilling": {
+      "method": "POST",
+      "actions": [
+        "get_settings",
+        "save_settings",
+        "retry_document",
+        "retry_all_blocked",
+        "get_document_url",
+        "regenerate_pdf",
+        "freeze_commission_rate"
+      ]
+    }
+  },
+  "order_fields": {
+    "financials": "RideFinancialsResult + computed_at + version",
+    "financials_status": "ready|error|retry|blocked_quote_refresh",
+    "financials_error_code": "string optional",
+    "financials_attempts": "number",
+    "billing_documents_status": "emitted|retry|blocked_billing_settings|blocked_driver_tax_registration",
+    "billing_documents_block_reason": "string optional",
+    "quote_refresh_status": "pending|ready|error",
+    "invoice_id": "string",
+    "statement_id": "string",
+    "price_breakdown": "PriceBreakdown (firm bid after accept)",
+    "price_breakdown_quote_original": "PriceBreakdown",
+    "quote_ride_total": "number",
+    "driver_payout_estimate": "number",
+    "driver_payout_toll": "number",
+    "driver_course_taxes_to_remit": "number",
+    "driver_net_estimate": "number"
+  },
+  "marketplace_bid_fields": {
+    "driver_payout_estimate": "number",
+    "driver_payout_toll": "number",
+    "driver_course_taxes_to_remit": "number",
+    "driver_net_estimate": "number"
+  },
+  "ride_financials": {
+    "type": "ride",
+    "passenger_total_ttc": "number",
+    "toll": "BillingTollSnapshot|null",
+    "tip": "number",
+    "commission_rate_applied": "number",
+    "commission_ht": "number",
+    "commission_taxes": "BillingTaxLine[]",
+    "retained_by_qlyp": "number",
+    "paid_to_driver": "number",
+    "driver_course_taxes_to_remit": "BillingTaxLine[]",
+    "driver_course_taxes_to_remit_total": "number",
+    "driver_revenue": "number",
+    "driver_payout_estimate": "number",
+    "driver_payout_toll": "number",
+    "driver_net_estimate": "number",
+    "cash_collected_by_driver": "boolean",
+    "cash_due_to_qlyp": "number",
+    "qlyp_promo_subsidy": "number",
+    "rounding_adjustment": "BillingAmountLine optional",
+    "snapshot": "RidePricingSnapshot",
+    "retained_breakdown": "RideFinancialsRetainedBreakdown",
+    "controls": {
+      "retained_plus_paid": "number",
+      "revenue_check": "number"
+    }
+  },
+  "invoices": {
+    "collection": "invoices",
+    "document": {
+      "version": 1,
+      "type": "ride|cancellation",
+      "document_number": "string",
+      "order_id": "string",
+      "user_id": "string",
+      "driver_id": "string",
+      "zone_id": "string",
+      "pillar": "string",
+      "language": "fr|en",
+      "issued_at": "string ISO",
+      "header": "BillingDocumentHeader",
+      "display_lines": "BillingDisplayLine[]",
+      "ride_subtotal_taxable_ht": "number",
+      "ride_taxes": "BillingTaxLine[]",
+      "ride_total_ttc": "number",
+      "toll": "BillingTollSnapshot|null",
+      "tip": "number",
+      "passenger_total_ttc": "number",
+      "payment": "BillingDocumentPayment",
+      "legal": "object",
+      "retain_until": "string ISO",
+      "retention_years": "number",
+      "pdf_path": "string|null",
+      "pdf_status": "pending|ready|error",
+      "pdf_error": "string optional",
+      "pdf_error_code": "string optional"
+    }
+  },
+  "driver_statements": {
+    "collection": "driver_statements",
+    "document": {
+      "version": 1,
+      "type": "ride|cancellation",
+      "document_number": "string",
+      "order_id": "string",
+      "user_id": "string",
+      "driver_id": "string",
+      "zone_id": "string",
+      "pillar": "string",
+      "language": "fr|en",
+      "issued_at": "string ISO",
+      "header": "BillingDocumentHeader",
+      "commission": "BillingCommissionBreakdown",
+      "statement_lines": "BillingStatementSectionLine[]",
+      "your_ride_lines": "BillingAmountLine[]",
+      "your_ride_subtotal_ht": "number",
+      "passenger_paid_total_ttc": "number",
+      "retained_total": "number",
+      "toll": "BillingTollSnapshot|null",
+      "tip": "number",
+      "paid_to_driver": "number",
+      "driver_taxes_to_remit": "BillingTaxLine[]",
+      "driver_taxes_to_remit_total": "number",
+      "driver_revenue": "number",
+      "qlyp_promo_subsidy": "number",
+      "cash_collected_by_driver": "boolean",
+      "cash_due_to_qlyp": "number",
+      "cash_collected_label_fr": "string optional",
+      "cash_collected_label_en": "string optional",
+      "cash_due_label_fr": "string optional",
+      "cash_due_label_en": "string optional",
+      "payment": "BillingDocumentPayment",
+      "legal": "object",
+      "retain_until": "string ISO",
+      "retention_years": "number",
+      "pdf_path": "string|null",
+      "pdf_status": "pending|ready|error",
+      "pdf_error": "string optional",
+      "pdf_error_code": "string optional"
+    }
+  },
+  "error_codes": {
+    "firm_bid_missing_quote_breakdown": "Firm bid accept or coupon without stamped price_breakdown / price_breakdown_solo",
+    "invalid_request": "getBillingDocumentUrl invalid input",
+    "not_found": "Billing document or order not found",
+    "permission_denied": "getBillingDocumentUrl caller not owner",
+    "pdf_not_ready": "PDF path or status not ready for signed URL",
+    "max_attempts_exceeded": "order financials write attempts exhausted",
+    "blocked_quote_refresh": "financials blocked until quote refresh completes",
+    "quote_refresh_pending": "financials deferred while quote_refresh_status pending",
+    "quote_refresh_error": "financials blocked after quote refresh error"
+  }
+}
