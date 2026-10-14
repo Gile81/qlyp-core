@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "type": "cancellation",
+  "document_number": "QLP-CAN-2026-000045",
+  "order_id": "ord_cancel_d",
+  "user_id": "pass_1",
+  "driver_id": "drv_1",
+  "zone_id": "zone_laval",
+  "pillar": "courses",
+  "language": "fr",
+  "issued_at": "2026-01-13T15:30:00.000Z",
+  "header": {
+    "passenger_name": "Marie Tremblay",
+    "driver_display_name": "Jean D.",
+    "driver_rating": null,
+    "route_from": "Laval, QC",
+    "route_to": "Montréal, QC",
+    "distance_km": null,
+    "duration_minutes": null,
+    "pillar_key": "courses",
+    "pillar_label_fr": "Courses",
+    "pillar_label_en": "Rides",
+    "tier_key": "standard",
+    "tier_label_fr": "Standard",
+    "tier_label_en": "Standard",
+    "price_type_key": "direct_quote",
+    "price_type_label_fr": "Course directe (prix du devis)",
+    "price_type_label_en": "Direct ride (quoted price)",
+    "issued_local_date": "2026-01-13",
+    "issued_local_time": "10 h 30",
+    "time_zone": "America/Toronto",
+    "show_price_type": false
+  },
+  "display_lines": [
+    {
+      "key": "cancellation_fee_detail",
+      "label_fr": "Annulation après l'arrivée du chauffeur, 13 janv. 2026 · 10 h 30",
+      "label_en": "Annulation après l'arrivée du chauffeur, 13 janv. 2026 · 10 h 30",
+      "amount": 2.05,
+      "section": "fee_detail"
+    },
+    {
+      "key": "taxable_subtotal",
+      "label_fr": "Sous-total taxable",
+      "label_en": "Taxable subtotal",
+      "amount": 2.05,
+      "section": "taxable_subtotal"
+    },
+    {
+      "key": "tax_gst",
+      "label_fr": "TPS (5 %)",
+      "label_en": "GST (5 %)",
+      "amount": 0.1,
+      "section": "tax"
+    },
+    {
+      "key": "tax_qst",
+      "label_fr": "TVQ (9,975 %)",
+      "label_en": "QST (9.975 %)",
+      "amount": 0.2,
+      "section": "tax"
+    },
+    {
+      "key": "cancellation_total",
+      "label_fr": "Total des frais",
+      "label_en": "Fee total",
+      "amount": 2.35,
+      "section": "ride_total"
+    },
+    {
+      "key": "passenger_total",
+      "label_fr": "Total payé",
+      "label_en": "Total paid",
+      "amount": 2.35,
+      "section": "grand_total"
+    }
+  ],
+  "ride_subtotal_taxable_ht": 2.05,
+  "ride_taxes": [
+    {
+      "id": "gst",
+      "rate": 0.05,
+      "amount": 0.1,
+      "label_fr": "TPS",
+      "label_en": "GST"
+    },
+    {
+      "id": "qst",
+      "rate": 0.09975,
+      "amount": 0.2,
+      "label_fr": "TVQ",
+      "label_en": "QST"
+    }
+  ],
+  "ride_total_ttc": 2.35,
+  "toll": null,
+  "tip": 0,
+  "passenger_total_ttc": 2.35,
+  "payment": {
+    "method": "card",
+    "status": "pending",
+    "label_fr": "Carte · en attente (prélèvement au Sprint 8)",
+    "label_en": "Card · pending (charge in Sprint 8)"
+  },
+  "legal": {
+    "platform": {
+      "legal_name": "Les Plateformes Qlyp Inc.",
+      "address_line1": "",
+      "city": "Montréal",
+      "province": "QC",
+      "postal_code": "",
+      "gst_number": "123456789RT0001",
+      "qst_number": "1234567890TQ0001"
+    },
+    "driver": {
+      "gst_number": "123456789RT0001",
+      "qst_number": "1234567890TQ0001"
+    }
+  },
+  "retain_until": "2033-01-13T16:00:00.000Z",
+  "retention_years": 7,
+  "pdf_path": null
+}

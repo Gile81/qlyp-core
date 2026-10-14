@@ -242,7 +242,10 @@ abstract final class BillingContract {
   static const String lineLabelFr = 'label_fr';
   static const String lineLabelEn = 'label_en';
   static const String lineAmount = 'amount';
+  static const String lineAmountHt = 'amount_ht';
   static const String lineSection = 'section';
+  static const String lineNotYoursFr = 'not_yours_fr';
+  static const String lineNotYoursEn = 'not_yours_en';
   static const String lineTextOnly = 'text_only';
 
   static const String errorInvalidRequest = 'invalid_request';

@@ -1,0 +1,251 @@
+{
+  "version": 1,
+  "type": "ride",
+  "document_number": "QLP-2026-000002",
+  "order_id": "ord_a_cash",
+  "user_id": "pass_1",
+  "driver_id": "drv_1",
+  "zone_id": "zone_laval",
+  "pillar": "courses",
+  "language": "fr",
+  "issued_at": "2026-01-13T15:30:00.000Z",
+  "header": {
+    "passenger_name": "",
+    "driver_display_name": "",
+    "driver_rating": null,
+    "route_from": "",
+    "route_to": "Montréal, QC",
+    "distance_km": null,
+    "duration_minutes": null,
+    "pillar_key": "courses",
+    "pillar_label_fr": "Courses",
+    "pillar_label_en": "Rides",
+    "tier_key": "standard",
+    "tier_label_fr": "Standard",
+    "tier_label_en": "Standard",
+    "price_type_key": "direct_quote",
+    "price_type_label_fr": "Course directe (prix du devis)",
+    "price_type_label_en": "Direct ride (quoted price)",
+    "issued_local_date": "2026-01-13",
+    "issued_local_time": "10 h 30",
+    "time_zone": "America/Toronto"
+  },
+  "commission": {
+    "rate": 0.18,
+    "base_ht": 21.1,
+    "commission_ht": 3.8,
+    "taxes": [
+      {
+        "id": "gst",
+        "rate": 0.05,
+        "amount": 0.19,
+        "label_fr": "TPS",
+        "label_en": "GST"
+      },
+      {
+        "id": "qst",
+        "rate": 0.09975,
+        "amount": 0.38,
+        "label_fr": "TVQ",
+        "label_en": "QST"
+      }
+    ],
+    "total_ttc": 4.37
+  },
+  "statement_lines": [
+    {
+      "key": "your_ride_subtotal",
+      "label_fr": "Votre course (HT)",
+      "label_en": "Your ride (excl. tax)",
+      "amount": 21.1,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_platform",
+      "label_fr": "Frais plateforme",
+      "label_en": "Platform fee",
+      "amount": 2,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_ctq_modernization_fee",
+      "label_fr": "Redevance CTQ",
+      "label_en": "CTQ fee",
+      "amount": 0.9,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_tax_gst",
+      "label_fr": "TPS",
+      "label_en": "GST",
+      "amount": 1.2,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_tax_qst",
+      "label_fr": "TVQ",
+      "label_en": "QST",
+      "amount": 2.39,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "passenger_paid_total",
+      "label_fr": "Total payé par la passagère",
+      "label_en": "Total paid by passenger",
+      "amount": 27.59,
+      "section": "passenger_paid"
+    },
+    {
+      "key": "commission_ht",
+      "label_fr": "Commission (18 % de 21,10 $)",
+      "label_en": "Commission (18% of $21.10)",
+      "amount": -3.8,
+      "section": "retained_by_qlyp"
+    },
+    {
+      "key": "commission_taxes",
+      "label_fr": "TPS / TVQ sur la commission",
+      "label_en": "GST / QST on commission",
+      "amount": -0.57,
+      "section": "retained_by_qlyp"
+    },
+    {
+      "key": "platform_total",
+      "label_fr": "Frais plateforme + taxes (non à vous)",
+      "label_en": "Platform fee + taxes (not yours)",
+      "amount": -2.3,
+      "section": "retained_by_qlyp"
+    },
+    {
+      "key": "ctq_modernization_fee_total",
+      "label_fr": "Redevance CTQ – CTQ Québec + taxes (non à vous)",
+      "label_en": "CTQ fee – CTQ Québec + taxes (not yours)",
+      "amount": -1.04,
+      "section": "retained_by_qlyp"
+    },
+    {
+      "key": "retained_total",
+      "label_fr": "Total retenu par QLYP",
+      "label_en": "Total retained by QLYP",
+      "amount": -7.71,
+      "section": "retained_by_qlyp"
+    },
+    {
+      "key": "driver_revenue_total",
+      "label_fr": "Revenu de la course",
+      "label_en": "Ride revenue",
+      "amount": 16.73,
+      "section": "driver_revenue"
+    },
+    {
+      "key": "driver_revenue_formula",
+      "label_fr": "(21,10 – 3,80 – 0,57)",
+      "label_en": "($21.10 – $3.80 – $0.57)",
+      "amount": 0,
+      "section": "driver_revenue",
+      "text_only": true
+    },
+    {
+      "key": "cash_collected",
+      "label_fr": "Encaissé par vous",
+      "label_en": "Collected by you",
+      "amount": 27.59,
+      "section": "cash_summary"
+    },
+    {
+      "key": "cash_due_qlyp",
+      "label_fr": "Dû à QLYP",
+      "label_en": "Due to QLYP",
+      "amount": 7.71,
+      "section": "cash_summary"
+    },
+    {
+      "key": "cash_driver_revenue",
+      "label_fr": "Votre revenu",
+      "label_en": "Your revenue",
+      "amount": 16.73,
+      "section": "cash_summary"
+    },
+    {
+      "key": "payout_sprint8",
+      "label_fr": "Mode, fréquence et date : au Sprint 8",
+      "label_en": "Method, frequency and date: in Sprint 8",
+      "amount": 0,
+      "section": "payout_info",
+      "text_only": true
+    },
+    {
+      "key": "decl_self_employed",
+      "label_fr": "Statut : travailleur autonome",
+      "label_en": "Status: self-employed contractor",
+      "amount": 0,
+      "section": "declarations",
+      "text_only": true
+    },
+    {
+      "key": "decl_taxes_collected",
+      "label_fr": "Taxes perçues pour vous (course) : 3,15 $",
+      "label_en": "Taxes collected for you (ride): $3.15",
+      "amount": 0,
+      "section": "declarations",
+      "text_only": true
+    }
+  ],
+  "your_ride_lines": [
+    {
+      "key": "strategy_base",
+      "label_fr": "Course",
+      "label_en": "Ride",
+      "amount_ht": 21.1,
+      "recipient": "driver",
+      "taxable": true
+    }
+  ],
+  "your_ride_subtotal_ht": 21.1,
+  "passenger_paid_total_ttc": 27.59,
+  "retained_total": -7.71,
+  "toll": null,
+  "tip": 0,
+  "paid_to_driver": 19.88,
+  "driver_taxes_to_remit": [
+    {
+      "id": "gst",
+      "rate": 0.05,
+      "amount": 1.05,
+      "label_fr": "TPS",
+      "label_en": "GST"
+    },
+    {
+      "id": "qst",
+      "rate": 0.09975,
+      "amount": 2.1,
+      "label_fr": "TVQ",
+      "label_en": "QST"
+    }
+  ],
+  "driver_taxes_to_remit_total": 3.15,
+  "driver_revenue": 16.73,
+  "qlyp_promo_subsidy": 0,
+  "cash_collected_by_driver": true,
+  "cash_due_to_qlyp": 7.71,
+  "payment": {
+    "method": "cash",
+    "status": "collected",
+    "label_fr": "Comptant · encaissé par le chauffeur",
+    "label_en": "Cash · collected by driver"
+  },
+  "legal": {
+    "platform": {
+      "legal_name": "Les Plateformes Qlyp Inc.",
+      "address_line1": "",
+      "city": "Montréal",
+      "province": "QC",
+      "postal_code": "",
+      "gst_number": "123456789RT0001",
+      "qst_number": "1234567890TQ0001"
+    }
+  },
+  "retain_until": "2033-01-13T15:30:00.000Z",
+  "retention_years": 7,
+  "pdf_path": null
+}

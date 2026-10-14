@@ -44,6 +44,7 @@ flutter:
     - assets/sounds/
     - assets/animations/
     - assets/images/vehicles/
+    - test/fixtures/billing_docs/
   fonts:
     - family: Inter
       fonts:

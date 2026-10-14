@@ -12,7 +12,13 @@ class BillingStatementView {
     this.language,
     this.issuedAt,
     this.header,
+    this.yourRideLines = const [],
+    this.yourRideSubtotalHt,
     this.statementLines = const [],
+    this.passengerPaidTotalTtc,
+    this.retainedTotal,
+    this.tollTotalTtc,
+    this.tip,
     this.paidToDriver,
     this.driverRevenue,
     this.driverTaxesToRemit = const [],
@@ -34,7 +40,13 @@ class BillingStatementView {
   final String? language;
   final String? issuedAt;
   final BillingDocumentHeaderView? header;
+  final List<BillingYourRideLineView> yourRideLines;
+  final double? yourRideSubtotalHt;
   final List<BillingStatementLineView> statementLines;
+  final double? passengerPaidTotalTtc;
+  final double? retainedTotal;
+  final double? tollTotalTtc;
+  final double? tip;
   final double? paidToDriver;
   final double? driverRevenue;
   final List<BillingTaxLineView> driverTaxesToRemit;
@@ -53,6 +65,17 @@ class BillingStatementView {
   factory BillingStatementView.fromMap(Map<String, dynamic>? raw) {
     if (raw == null || raw.isEmpty) {
       return const BillingStatementView();
+    }
+    final rideLinesRaw = raw[BillingContract.statementFieldYourRideLines];
+    final rideLines = <BillingYourRideLineView>[];
+    if (rideLinesRaw is List) {
+      for (final item in rideLinesRaw) {
+        if (item is Map) {
+          rideLines.add(
+            BillingYourRideLineView.fromMap(Map<String, dynamic>.from(item)),
+          );
+        }
+      }
     }
     final linesRaw = raw[BillingContract.statementFieldStatementLines];
     final lines = <BillingStatementLineView>[];
@@ -79,6 +102,13 @@ class BillingStatementView {
     final headerRaw = raw[BillingContract.invoiceFieldHeader];
     final paymentRaw = raw[BillingContract.invoiceFieldPayment];
     final legalRaw = raw[BillingContract.invoiceFieldLegal];
+    final tollRaw = raw[BillingContract.invoiceFieldToll];
+    double? tollTotal;
+    if (tollRaw is Map) {
+      tollTotal = billingAsDouble(
+        (tollRaw as Map<String, dynamic>)['total_ttc'],
+      );
+    }
     return BillingStatementView(
       documentNumber:
           billingOptionalString(raw[BillingContract.invoiceFieldDocumentNumber]),
@@ -90,7 +120,18 @@ class BillingStatementView {
               Map<String, dynamic>.from(headerRaw),
             )
           : null,
+      yourRideLines: rideLines,
+      yourRideSubtotalHt: billingAsDouble(
+        raw[BillingContract.statementFieldYourRideSubtotalHt],
+      ),
       statementLines: lines,
+      passengerPaidTotalTtc: billingAsDouble(
+        raw[BillingContract.statementFieldPassengerPaidTotalTtc],
+      ),
+      retainedTotal:
+          billingAsDouble(raw[BillingContract.statementFieldRetainedTotal]),
+      tollTotalTtc: tollTotal,
+      tip: billingAsDouble(raw[BillingContract.invoiceFieldTip]),
       paidToDriver:
           billingAsDouble(raw[BillingContract.statementFieldPaidToDriver]),
       driverRevenue:

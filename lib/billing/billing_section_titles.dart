@@ -1,4 +1,14 @@
-/// Section titles aligned with server PDF maquettes (S7-D).
+// Section titles aligned with server PDF maquettes (S7-D).
+
+// Invoice header title (same rule as billing-pdf-render.ts).
+String billingInvoiceDocumentTitle(String languageCode, String type) {
+  final fr = languageCode.toLowerCase().startsWith('fr');
+  if (type == 'cancellation') {
+    return fr ? "Facture d'annulation" : 'Cancellation invoice';
+  }
+  return fr ? 'Facture' : 'Invoice';
+}
+
 String? invoiceSectionTitle(String languageCode, String section) {
   final fr = languageCode.toLowerCase().startsWith('fr');
   switch (section) {
