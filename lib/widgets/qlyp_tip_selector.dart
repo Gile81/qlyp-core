@@ -112,19 +112,26 @@ class _QlypTipSelectorState extends State<QlypTipSelector> {
               ? () => widget.onGive!(amount)
               : null,
         ),
-        const SizedBox(height: 8),
-        QlypSecondaryButton(
-          label: _laterLabel,
-          size: QlypButtonSize.medium,
-          style: QlypSecondaryButtonStyle.subtle,
-          onPressed: widget.onLater,
-        ),
-        const SizedBox(height: 8),
-        QlypSecondaryButton(
-          label: _declineLabel,
-          size: QlypButtonSize.medium,
-          style: QlypSecondaryButtonStyle.outlined,
-          onPressed: widget.onDecline,
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            QlypSecondaryButton(
+              label: _laterLabel,
+              size: QlypButtonSize.small,
+              expanded: false,
+              style: QlypSecondaryButtonStyle.subtle,
+              onPressed: widget.onLater,
+            ),
+            const SizedBox(width: 8),
+            QlypSecondaryButton(
+              label: _declineLabel,
+              size: QlypButtonSize.small,
+              expanded: false,
+              style: QlypSecondaryButtonStyle.outlined,
+              onPressed: widget.onDecline,
+            ),
+          ],
         ),
       ],
     );

@@ -33,6 +33,9 @@ void main() {
             child: QlypTipSelector(
               options: options,
               languageCode: 'fr',
+              onGive: (_) {},
+              onLater: () {},
+              onDecline: () {},
             ),
           ),
         ),
