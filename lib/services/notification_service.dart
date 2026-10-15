@@ -67,6 +67,28 @@ abstract class QlypNotificationService {
   static const String legalZoneRefusedChannelNameFr = 'Zones de travail refusées';
   static const String legalZoneRefusedChannelNameEn = 'Refused work zones';
 
+  /// Android notification channel title (passenger + driver rideUpdates).
+  static const String rideUpdatesChannelName = 'Ride updates';
+
+  /// Ids registered in [_createDriverAndroidChannels] (role-specific only).
+  static const List<String> driverRoleAndroidChannelIds = [
+    alertChannelId,
+    dispatchChannelId,
+    marketplaceChannelId,
+    QlypNotificationChannels.rideUpdates,
+  ];
+
+  /// Ids registered in [_createPassengerAndroidChannels] (role-specific only).
+  static const List<String> passengerRoleAndroidChannelIds = [
+    QlypNotificationChannels.rideAccepted,
+    QlypNotificationChannels.driverArriving,
+    QlypNotificationChannels.payments,
+    QlypNotificationChannels.rideUpdates,
+    QlypNotificationChannels.scheduled,
+    QlypNotificationChannels.marketplacePassenger,
+    QlypNotificationChannels.route,
+  ];
+
   String get channelDescription => 'Qlyp alerts';
 
   NotificationTapHandler get onMessageTap;
@@ -301,6 +323,14 @@ abstract class QlypNotificationService {
         audioAttributesUsage: AudioAttributesUsage.alarm,
       ),
     );
+    await androidPlugin?.createNotificationChannel(
+      AndroidNotificationChannel(
+        QlypNotificationChannels.rideUpdates,
+        rideUpdatesChannelName,
+        description: channelDescription,
+        importance: Importance.high,
+      ),
+    );
   }
 
   Future<void> _createPassengerAndroidChannels(
@@ -339,7 +369,7 @@ abstract class QlypNotificationService {
     await androidPlugin?.createNotificationChannel(
       AndroidNotificationChannel(
         QlypNotificationChannels.rideUpdates,
-        'Ride updates',
+        rideUpdatesChannelName,
         description: channelDescription,
         importance: Importance.high,
       ),

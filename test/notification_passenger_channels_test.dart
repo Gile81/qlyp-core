@@ -53,4 +53,26 @@ void main() {
     expect(resolved.channelId, QlypNotificationChannels.payments);
     expect(resolved.soundResource, 'payment_success');
   });
+
+  test('driver Android role channels include ride updates', () {
+    expect(
+      QlypNotificationService.driverRoleAndroidChannelIds,
+      contains(QlypNotificationChannels.rideUpdates),
+    );
+  });
+
+  test('passenger Android role channel ids unchanged', () {
+    expect(
+      QlypNotificationService.passengerRoleAndroidChannelIds,
+      [
+        QlypNotificationChannels.rideAccepted,
+        QlypNotificationChannels.driverArriving,
+        QlypNotificationChannels.payments,
+        QlypNotificationChannels.rideUpdates,
+        QlypNotificationChannels.scheduled,
+        QlypNotificationChannels.marketplacePassenger,
+        QlypNotificationChannels.route,
+      ],
+    );
+  });
 }
