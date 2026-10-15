@@ -56,6 +56,9 @@ const Duration kDurNearbyVehicleServerWrite = Duration(seconds: 10);
 /// Position live considérée périmée au-delà de 30 s sans `positionAt`.
 const Duration kRideLiveStalePosition = Duration(seconds: 30);
 
+/// Rafraîchissement aligné sur la seconde (OTP, compte à rebours course).
+const Duration kDurClockSecond = Duration(seconds: 1);
+
 /// Saut GPS : placement direct sans glisser (téléportation / perte de signal).
 const double kVehicleTeleportDistanceMeters = 500;
 
