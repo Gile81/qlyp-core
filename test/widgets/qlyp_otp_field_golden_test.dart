@@ -55,6 +55,25 @@ void main() {
     );
   });
 
+  testWidgets('QlypOtpField autoFocus requests focus', (tester) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: QlypTheme.light(),
+        home: Scaffold(
+          body: QlypOtpField(
+            length: 4,
+            controller: controller,
+            autoFocus: true,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(FocusManager.instance.primaryFocus, isNotNull);
+  });
+
   testWidgets('QlypOtpField error', (tester) async {
     final controller = TextEditingController(text: '12');
     addTearDown(controller.dispose);

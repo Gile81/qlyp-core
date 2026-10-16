@@ -14,6 +14,8 @@ class QlypOtpField extends StatelessWidget {
     this.onCompleted,
     this.enabled = true,
     this.hasError = false,
+    this.autoFocus = false,
+    this.focusNode,
   });
 
   final int length;
@@ -22,6 +24,12 @@ class QlypOtpField extends StatelessWidget {
   final ValueChanged<String>? onCompleted;
   final bool enabled;
   final bool hasError;
+
+  /// When true, requests focus when the field is first built (pilote code screens).
+  final bool autoFocus;
+
+  /// Optional focus node (e.g. refocus after clearing on validation error).
+  final FocusNode? focusNode;
 
   static const double _boxWidth = 44;
   static const double _boxHeight = 48;
@@ -58,6 +66,8 @@ class QlypOtpField extends StatelessWidget {
         length: length,
         appContext: context,
         controller: controller,
+        focusNode: focusNode,
+        autoFocus: autoFocus,
         enabled: enabled,
         autoDisposeControllers: false,
         keyboardType: TextInputType.number,
