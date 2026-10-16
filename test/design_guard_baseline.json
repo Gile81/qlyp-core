@@ -211,9 +211,9 @@
     },
     "lib/widgets/qlyp_buttons.dart": {
       "color_hex": 0,
-      "colors_material": 25,
-      "font_size": 6,
-      "font_weight": 6,
+      "colors_material": 17,
+      "font_size": 0,
+      "font_weight": 0,
       "duration": 0,
       "curves": 0,
       "circular_progress": 0,

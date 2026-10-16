@@ -195,4 +195,73 @@ class QlypTypography {
               : QlypColors.midnightQlyp,
         );
   }
+
+  /// CTA primaire sur dégradé — titre (ligne 1 empilée ou libellé row + endLabel).
+  static TextStyle primaryButtonOnBrandTitle(TextStyle onBrandLabel) {
+    return onBrandLabel.copyWith(
+      fontWeight: FontWeight.w700,
+      fontSize: 15,
+    );
+  }
+
+  /// CTA empilé — sous-titre (ex. « Prix indicatif »).
+  static TextStyle primaryButtonStackedCaption() {
+    return qlypTextTheme().bodySmall!.copyWith(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+          color: QlypColors.onDarkSecondary,
+        );
+  }
+
+  /// CTA empilé — détail (ex. montant).
+  static TextStyle primaryButtonStackedDetail({
+    Brightness brightness = Brightness.light,
+  }) {
+    return buttonLabelSmall(brightness: brightness).copyWith(
+          color: QlypColors.white,
+          fontWeight: FontWeight.w800,
+          fontSize: 13,
+        );
+  }
+
+  /// CTA primaire — libellé trailing (ex. prix à droite).
+  static TextStyle primaryButtonOnBrandEndLabel(TextStyle onBrandLabel) {
+    return onBrandLabel.copyWith(
+      fontWeight: FontWeight.w800,
+      fontSize: 15,
+    );
+  }
+
+  static Color textButtonForeground({
+    required bool enabled,
+    bool danger = false,
+    bool accent = false,
+    bool onDark = false,
+    bool muted = false,
+  }) {
+    if (!enabled) return QlypColors.grayDisabled;
+    if (danger) return QlypColors.red;
+    if (accent) return QlypColors.amber;
+    if (muted) return QlypColors.gray;
+    return onDark ? QlypColors.onDarkPrimary : QlypColors.midnightQlyp;
+  }
+
+  static TextStyle? textButtonLabelStyle({
+    required TextStyle? base,
+    required Color color,
+    bool muted = false,
+    bool underlined = false,
+    bool accent = false,
+  }) {
+    if (!muted && !underlined && !accent) {
+      return base?.copyWith(color: color);
+    }
+    return base?.copyWith(
+      color: color,
+      fontWeight: FontWeight.w700,
+      fontSize: muted ? 11 : 14,
+      decoration: underlined ? TextDecoration.underline : null,
+      decorationColor: color,
+    );
+  }
 }

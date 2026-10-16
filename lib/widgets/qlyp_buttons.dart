@@ -80,24 +80,12 @@ class QlypPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
     final textStyle = size.labelStyle(context).copyWith(color: QlypColors.white);
-    final captionStyle = QlypTypography.caption(brightness: Theme.of(context).brightness)
-        .copyWith(
-      color: QlypColors.onDarkSecondary,
-      fontSize: 11,
-      fontWeight: FontWeight.w500,
-    );
-    final detailStyle = QlypTypography.buttonLabelSmall(
-      brightness: Theme.of(context).brightness,
-    ).copyWith(
-      color: QlypColors.white,
-      fontWeight: FontWeight.w800,
-      fontSize: 13,
-    );
 
     Widget content = isLoading
         ? const QlypLoading(size: QlypLoadingSize.button)
-        : _buildLabelContent(textStyle, captionStyle, detailStyle);
+        : _buildLabelContent(textStyle, brightness);
 
     final shell = AnimatedContainer(
       duration: kDurPress,
@@ -129,12 +117,12 @@ class QlypPrimaryButton extends StatelessWidget {
     );
   }
 
-  Widget _buildLabelContent(
-    TextStyle textStyle,
-    TextStyle captionStyle,
-    TextStyle detailStyle,
-  ) {
+  Widget _buildLabelContent(TextStyle textStyle, Brightness brightness) {
     if (stackedCaption != null || stackedDetail != null) {
+      final titleStyle = QlypTypography.primaryButtonOnBrandTitle(textStyle);
+      final captionStyle = QlypTypography.primaryButtonStackedCaption();
+      final detailStyle =
+          QlypTypography.primaryButtonStackedDetail(brightness: brightness);
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -143,7 +131,7 @@ class QlypPrimaryButton extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: textStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 15),
+            style: titleStyle,
           ),
           if (stackedCaption != null) ...[
             const SizedBox(height: 2),
@@ -165,6 +153,8 @@ class QlypPrimaryButton extends StatelessWidget {
       );
     }
     if (endLabel != null) {
+      final rowMain = QlypTypography.primaryButtonOnBrandTitle(textStyle);
+      final rowEnd = QlypTypography.primaryButtonOnBrandEndLabel(textStyle);
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -176,14 +166,14 @@ class QlypPrimaryButton extends StatelessWidget {
             label,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: textStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 15),
+            style: rowMain,
           ),
           const SizedBox(width: 8),
           Text(
             endLabel!,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: textStyle.copyWith(fontWeight: FontWeight.w800, fontSize: 15),
+            style: rowEnd,
           ),
         ],
       );
@@ -349,28 +339,20 @@ class QlypTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = !_enabled
-        ? QlypColors.grayDisabled
-        : tone == QlypButtonTone.danger
-            ? QlypColors.red
-            : tone == QlypButtonTone.accent
-                ? QlypColors.amber
-                : muted
-                    ? QlypColors.gray
-                    : (onDark
-                        ? QlypColors.onDarkPrimary
-                        : QlypColors.midnightQlyp);
-
-    TextStyle? style =
-        Theme.of(context).textTheme.labelLarge?.copyWith(color: color);
-    if (muted || underlined || tone == QlypButtonTone.accent) {
-      style = style?.copyWith(
-        fontWeight: FontWeight.w700,
-        fontSize: muted ? 11 : 14,
-        decoration: underlined ? TextDecoration.underline : null,
-        decorationColor: color,
-      );
-    }
+    final color = QlypTypography.textButtonForeground(
+      enabled: _enabled,
+      danger: tone == QlypButtonTone.danger,
+      accent: tone == QlypButtonTone.accent,
+      onDark: onDark,
+      muted: muted,
+    );
+    final style = QlypTypography.textButtonLabelStyle(
+      base: Theme.of(context).textTheme.labelLarge,
+      color: color,
+      muted: muted,
+      underlined: underlined,
+      accent: tone == QlypButtonTone.accent,
+    );
 
     return QlypPressable(
       enabled: _enabled,
