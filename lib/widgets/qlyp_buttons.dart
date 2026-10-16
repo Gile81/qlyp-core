@@ -8,7 +8,7 @@ import 'qlyp_pressable.dart';
 
 enum QlypButtonSize { large, medium, small }
 
-enum QlypButtonTone { normal, danger }
+enum QlypButtonTone { normal, danger, accent }
 
 enum QlypSecondaryButtonStyle { outlined, subtle }
 
@@ -50,6 +50,9 @@ class QlypPrimaryButton extends StatelessWidget {
     this.isLoading = false,
     this.size = QlypButtonSize.large,
     this.expanded,
+    this.stackedCaption,
+    this.stackedDetail,
+    this.endLabel,
   });
 
   final String label;
@@ -58,41 +61,48 @@ class QlypPrimaryButton extends StatelessWidget {
   final bool isLoading;
   final QlypButtonSize size;
   final bool? expanded;
+  /// Second line (e.g. « Prix indicatif ») with [stackedDetail] below.
+  final String? stackedCaption;
+  final String? stackedDetail;
+  /// Trailing text on the same row as [label] (e.g. price next to « Réserver »).
+  final String? endLabel;
 
   bool get _enabled => onPressed != null && !isLoading;
 
   bool get _expanded => expanded ?? size.defaultExpanded;
 
+  double get _height {
+    if (stackedCaption != null || stackedDetail != null) {
+      return QlypStyle.buttonHeightStacked;
+    }
+    return size.height;
+  }
+
   @override
   Widget build(BuildContext context) {
     final textStyle = size.labelStyle(context).copyWith(color: QlypColors.white);
+    final captionStyle = QlypTypography.caption(brightness: Theme.of(context).brightness)
+        .copyWith(
+      color: QlypColors.onDarkSecondary,
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+    );
+    final detailStyle = QlypTypography.buttonLabelSmall(
+      brightness: Theme.of(context).brightness,
+    ).copyWith(
+      color: QlypColors.white,
+      fontWeight: FontWeight.w800,
+      fontSize: 13,
+    );
 
     Widget content = isLoading
         ? const QlypLoading(size: QlypLoadingSize.button)
-        : Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, size: size.iconSize, color: QlypColors.white),
-                const SizedBox(width: 8),
-              ],
-              Flexible(
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: textStyle,
-                ),
-              ),
-            ],
-          );
+        : _buildLabelContent(textStyle, captionStyle, detailStyle);
 
     final shell = AnimatedContainer(
       duration: kDurPress,
       curve: kQlypSpring,
-      height: size.height,
+      height: _height,
       width: _expanded ? double.infinity : null,
       padding: EdgeInsets.symmetric(horizontal: size.horizontalPadding),
       alignment: Alignment.center,
@@ -116,6 +126,86 @@ class QlypPrimaryButton extends StatelessWidget {
       semanticsLabel: label,
       onTap: _enabled ? onPressed : null,
       child: _expanded ? shell : IntrinsicWidth(child: shell),
+    );
+  }
+
+  Widget _buildLabelContent(
+    TextStyle textStyle,
+    TextStyle captionStyle,
+    TextStyle detailStyle,
+  ) {
+    if (stackedCaption != null || stackedDetail != null) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: textStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 15),
+          ),
+          if (stackedCaption != null) ...[
+            const SizedBox(height: 2),
+            Text(
+              stackedCaption!,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: captionStyle,
+            ),
+          ],
+          if (stackedDetail != null)
+            Text(
+              stackedDetail!,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: detailStyle,
+            ),
+        ],
+      );
+    }
+    if (endLabel != null) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: size.iconSize, color: QlypColors.white),
+            const SizedBox(width: 8),
+          ],
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: textStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 15),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            endLabel!,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: textStyle.copyWith(fontWeight: FontWeight.w800, fontSize: 15),
+          ),
+        ],
+      );
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (icon != null) ...[
+          Icon(icon, size: size.iconSize, color: QlypColors.white),
+          const SizedBox(width: 8),
+        ],
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: textStyle,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -243,12 +333,17 @@ class QlypTextButton extends StatelessWidget {
     required this.onPressed,
     this.tone = QlypButtonTone.normal,
     this.onDark = false,
+    this.underlined = false,
+    this.muted = false,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final QlypButtonTone tone;
   final bool onDark;
+  final bool underlined;
+  /// Secondary coverflow / home links (gray, not brand midnight).
+  final bool muted;
 
   bool get _enabled => onPressed != null;
 
@@ -258,7 +353,24 @@ class QlypTextButton extends StatelessWidget {
         ? QlypColors.grayDisabled
         : tone == QlypButtonTone.danger
             ? QlypColors.red
-            : (onDark ? QlypColors.onDarkPrimary : QlypColors.midnightQlyp);
+            : tone == QlypButtonTone.accent
+                ? QlypColors.amber
+                : muted
+                    ? QlypColors.gray
+                    : (onDark
+                        ? QlypColors.onDarkPrimary
+                        : QlypColors.midnightQlyp);
+
+    TextStyle? style =
+        Theme.of(context).textTheme.labelLarge?.copyWith(color: color);
+    if (muted || underlined || tone == QlypButtonTone.accent) {
+      style = style?.copyWith(
+        fontWeight: FontWeight.w700,
+        fontSize: muted ? 11 : 14,
+        decoration: underlined ? TextDecoration.underline : null,
+        decorationColor: color,
+      );
+    }
 
     return QlypPressable(
       enabled: _enabled,
@@ -268,7 +380,8 @@ class QlypTextButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Text(
           label,
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: color),
+          textAlign: TextAlign.center,
+          style: style,
         ),
       ),
     );
@@ -341,6 +454,9 @@ class QlypButton extends StatelessWidget {
     this.isLoading = false,
     this.size = QlypButtonSize.large,
     this.expanded,
+    this.stackedCaption,
+    this.stackedDetail,
+    this.endLabel,
   });
 
   final String label;
@@ -350,6 +466,9 @@ class QlypButton extends StatelessWidget {
   final bool isLoading;
   final QlypButtonSize size;
   final bool? expanded;
+  final String? stackedCaption;
+  final String? stackedDetail;
+  final String? endLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -362,6 +481,9 @@ class QlypButton extends StatelessWidget {
           isLoading: isLoading,
           size: size,
           expanded: expanded,
+          stackedCaption: stackedCaption,
+          stackedDetail: stackedDetail,
+          endLabel: endLabel,
         );
       case QlypButtonVariant.secondary:
         return QlypSecondaryButton(

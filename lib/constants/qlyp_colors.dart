@@ -117,6 +117,8 @@ class QlypStyle {
   static const double sheetMaxHeightFraction = 0.9;
 
   static const double buttonHeightLarge = 52.0;
+  /// CTA with title + caption + value (coverflow offer mode).
+  static const double buttonHeightStacked = 62.0;
   static const double buttonHeightMedium = 44.0;
   static const double buttonHeightSmall = 36.0;
 
