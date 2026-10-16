@@ -129,6 +129,9 @@ const Duration kDurPopupDimIn = Duration(milliseconds: 240);
 const Duration kDurPopupIn = Duration(milliseconds: 420);
 const Duration kDurPopupOut = Duration(milliseconds: 420);
 
+/// Écran voiture : résumé du gain à la fin d'une course.
+const Duration kDurCarRideSummaryHold = Duration(seconds: 8);
+
 /// Alias legacy — encore utilisé par qlyp-client (S5-6-apps le remplacera).
 @Deprecated('Use kDurTab')
 const Duration kDurS = kDurTab;
