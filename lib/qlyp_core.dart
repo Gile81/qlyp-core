@@ -127,6 +127,8 @@ export 'widgets/qlyp_route_stops_timeline.dart';
 export 'route_stops/qlyp_route_stops_progress.dart';
 export 'models/ride_live_next_stop.dart';
 export 'pricing/zone_service_activation.dart';
+export 'pricing/moving_tier_recommendation.dart';
+export 'pricing/wizard_surcharges.dart';
 export 'booking/booking_defaults_to_offers.dart';
 export 'models/bidding/marketplace_bid_view.dart';
 export 'models/bidding/firm_price_breakdown.dart';
